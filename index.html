@@ -338,6 +338,39 @@
     border-top: 1px solid var(--border);
     margin: .2rem 0;
   }
+
+  /* ── EXPORTAR Y METODOLOGIA ──────────────────────────────────────────────── */
+  .export-bar {
+    display: flex; gap: 10px; padding: 12px 20px;
+    background: #0a1520; border-top: 1px solid #1e3a5f;
+    border-bottom: 1px solid #1e3a5f; flex-wrap: wrap; align-items: center;
+  }
+  .export-bar span {
+    color: #7a9ab5; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1px; margin-right: 4px; font-family: var(--mono);
+  }
+  .btn-export {
+    background: #1a3a5c; color: var(--gold); border: 1px solid #2a5a8c;
+    padding: 7px 18px; font-size: 11px; cursor: pointer; letter-spacing: 1px;
+    text-transform: uppercase; font-family: var(--mono); transition: all .2s;
+  }
+  .btn-export:hover { background: var(--gold); color: #0d1b2a; }
+  .metodologia {
+    background: #07111c; border-top: 2px solid #1e3a5f; padding: 28px 32px;
+  }
+  .metodologia h3 {
+    color: var(--gold); font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 18px;
+    border-bottom: 1px solid #1e3a5f; padding-bottom: 10px; font-family: var(--mono);
+  }
+  .met-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .met-card { background: #0d1b2a; padding: 16px 18px; border-left: 3px solid #2a5a8c; }
+  .met-card h4 {
+    color: #7ab8e8; font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 10px; font-family: var(--mono);
+  }
+  .met-card p { color: #8fafc8; font-size: 12px; line-height: 1.75; margin: 0; }
+  @media (max-width: 700px) { .met-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -437,6 +470,13 @@
 
     <!-- KPIs -->
     <div class="kpi-row" id="kpi-row"></div>
+
+    <!-- exportar -->
+    <div class="export-bar">
+      <span>Exportar resultados:</span>
+      <button class="btn-export" id="btn-csv">&#8659; CSV / Excel</button>
+      <button class="btn-export" id="btn-print">&#128424; Imprimir / PDF</button>
+    </div>
 
     <!-- alert -->
     <div id="alert-box"></div>
@@ -806,6 +846,59 @@ function setView(v) {
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render();
+
+// ── EXPORTAR ──────────────────────────────────────────────────────────────────
+document.getElementById('btn-csv').addEventListener('click', function() {
+  var inputs = Array.from(document.querySelectorAll('input[type=range]'));
+  var kpis   = Array.from(document.querySelectorAll('.kpi-value'));
+  var pNames = [
+    'Tasa retorno real anual (%)', 'Piso pension ($ miles/mes)',
+    'N jubilados civiles (miles)', 'Capital propio prom ($ millones)',
+    'Sueldo previo prom ($ miles/mes)', 'Tasa reemplazo objetivo (%)',
+    'N uniformados (miles)', 'Pension prom uniformados ($ miles/mes)',
+    'Cotizacion propia uniformados (%)'
+  ];
+  var rNames = [
+    'Capital Total Necesario', 'Capital a Prestar (Top-Up)',
+    'Gasto Anual Pensiones', 'Interes Anual Generado',
+    'Superavit / Deficit Anual', 'Cobertura del Gasto'
+  ];
+  var rows = [
+    'MODELO RENTISTA - Exportacion de Resultados',
+    'Fecha,' + new Date().toLocaleDateString('es-CL'),
+    '', 'PARAMETROS DE ENTRADA', 'Variable,Valor'
+  ];
+  inputs.forEach(function(inp, i) { rows.push((pNames[i] || 'Param ' + i) + ',' + inp.value); });
+  rows.push('', 'RESULTADOS PRINCIPALES', 'Indicador,Valor');
+  kpis.forEach(function(kpi, i) { rows.push((rNames[i] || 'Resultado ' + i) + ',' + kpi.textContent.trim()); });
+  rows.push('', 'Modelo Rentista - Danilo Daneri Solano - Santiago Chile 2026', 'Asistencia tecnica: Claude (Anthropic)');
+  var blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ModeloRentista_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+});
+
+document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
 </script>
+    <!-- metodologia -->
+    <div class="metodologia">
+      <h3>Supuestos y Metodolog&#237;a</h3>
+      <div class="met-grid">
+        <div class="met-card">
+          <h4>F&#243;rmula Central</h4>
+          <p>El capital necesario se calcula como: <strong style="color:#f0c040;font-family:monospace">C_nec = Pensi&#243;n &times; 12 &divide; r</strong>. Donde <em>r</em> es la tasa de retorno real anual. El Top-Up (TU) es el capital adicional que el Estado presta al trabajador para alcanzar el capital necesario dado su ahorro propio: <strong style="color:#f0c040;font-family:monospace">TU = max(0, C_nec &minus; C_prop)</strong>.</p>
+        </div>
+        <div class="met-card">
+          <h4>Supuestos Base</h4>
+          <p>Tasa de retorno real: <strong style="color:#f0c040">5% anual</strong> (ajustable con slider). Piso de pensi&#243;n: <strong style="color:#f0c040">$539 mil/mes</strong> (referencia PBS Chile 2024). Poblaci&#243;n civil AFP: <strong style="color:#f0c040">1.200 mil jubilados</strong>. Capital propio promedio AFP: <strong style="color:#f0c040">$22 millones</strong>. Tasa de reemplazo objetivo: <strong style="color:#f0c040">80%</strong> del sueldo previo. Uniformados CAPREDENA+DIPRECA: <strong style="color:#f0c040">177 mil personas</strong>.</p>
+        </div>
+        <div class="met-card">
+          <h4>Notas T&#233;cnicas</h4>
+          <p>Valores en pesos chilenos constantes (CLP 2024). El modelo es est&#225;tico: no incluye demograf&#237;a din&#225;mica ni inflaci&#243;n diferencial. El Top-Up es un pr&#233;stamo estatal sobre el capital, no un gasto directo; el inter&#233;s generado financia las pensiones. Cobertura = Inter&#233;s anual &divide; Gasto anual. Fuentes: CMF, Superintendencia de Pensiones, DIPRES, CAPREDENA 2023&ndash;2024.</p>
+        </div>
+      </div>
+    </div>
+
 </body>
 </html>
