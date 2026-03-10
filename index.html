@@ -534,10 +534,10 @@ function calc() {
   const cPropCiv = S.cProp;
   // Top-up por jubilado civil (promedio)
   const tuCiv = Math.max(0, cNecCiv - cPropCiv);
-  // Totales civiles (en billones CLP — dividimos por 1000 para pasar de M a B × n_miles)
-  const totalCPropCiv = cPropCiv * S.nCiv / 1000;   // B CLP
-  const totalTUCiv    = tuCiv    * S.nCiv / 1000;
-  const totalCNecCiv  = cNecCiv  * S.nCiv / 1000;
+  // Totales civiles (en billones CLP — cNecCiv en MM$, nCiv en miles → /1e6 para obtener B)
+  const totalCPropCiv = cPropCiv * S.nCiv / 1e6;   // B CLP
+  const totalTUCiv    = tuCiv    * S.nCiv / 1e6;
+  const totalCNecCiv  = cNecCiv  * S.nCiv / 1e6;
   // Gasto pensiones civiles anual
   const gastoCivAnual = pensCivObj * 12 * S.nCiv / 1e6; // B CLP
   // Interés anual que genera el capital civil
@@ -549,9 +549,9 @@ function calc() {
   // Suponemos capital propio uniformado = 6% × pensMil × 30 años carrera (simplificado)
   const cPropMil = pensMil * 12 * 0.06 * 25 / 1000; // aprox acumulado
   const tuMilUnit = Math.max(0, cNecMil - cPropMil);
-  const totalCPropMil = cPropMil * S.nMil / 1000;
-  const totalTUMil    = tuMilUnit * S.nMil / 1000;
-  const totalCNecMil  = cNecMil  * S.nMil / 1000;
+  const totalCPropMil = cPropMil * S.nMil / 1e6;
+  const totalTUMil    = tuMilUnit * S.nMil / 1e6;
+  const totalCNecMil  = cNecMil  * S.nMil / 1e6;
   const gastoMilAnual = pensMil * 12 * S.nMil / 1e6;
   const interesMillAnual = totalCNecMil * r;
   // Financiamiento propio (cotizaciones)
@@ -851,35 +851,19 @@ render();
 document.getElementById('btn-csv').addEventListener('click', function() {
   var inputs = Array.from(document.querySelectorAll('input[type=range]'));
   var kpis   = Array.from(document.querySelectorAll('.kpi-value'));
-  var pNames = [
-    'Tasa retorno real anual (%)', 'Piso pension ($ miles/mes)',
-    'N jubilados civiles (miles)', 'Capital propio prom ($ millones)',
-    'Sueldo previo prom ($ miles/mes)', 'Tasa reemplazo objetivo (%)',
-    'N uniformados (miles)', 'Pension prom uniformados ($ miles/mes)',
-    'Cotizacion propia uniformados (%)'
-  ];
-  var rNames = [
-    'Capital Total Necesario', 'Capital a Prestar (Top-Up)',
-    'Gasto Anual Pensiones', 'Interes Anual Generado',
-    'Superavit / Deficit Anual', 'Cobertura del Gasto'
-  ];
-  var rows = [
-    'MODELO RENTISTA - Exportacion de Resultados',
-    'Fecha,' + new Date().toLocaleDateString('es-CL'),
-    '', 'PARAMETROS DE ENTRADA', 'Variable,Valor'
-  ];
-  inputs.forEach(function(inp, i) { rows.push((pNames[i] || 'Param ' + i) + ',' + inp.value); });
-  rows.push('', 'RESULTADOS PRINCIPALES', 'Indicador,Valor');
-  kpis.forEach(function(kpi, i) { rows.push((rNames[i] || 'Resultado ' + i) + ',' + kpi.textContent.trim()); });
-  rows.push('', 'Modelo Rentista - Danilo Daneri Solano - Santiago Chile 2026', 'Asistencia tecnica: Claude (Anthropic)');
-  var blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'ModeloRentista_' + new Date().toISOString().slice(0, 10) + '.csv';
+  var pNames = ['Tasa retorno real anual (%)','Piso pension ($ miles/mes)','N jubilados civiles (miles)','Capital propio prom ($ millones)','Sueldo previo prom ($ miles/mes)','Tasa reemplazo objetivo (%)','N uniformados (miles)','Pension prom uniformados ($ miles/mes)','Cotizacion propia uniformados (%)'];
+  var rNames = ['Capital Total Necesario','Capital a Prestar (Top-Up)','Gasto Anual Pensiones','Interes Anual Generado','Superavit / Deficit Anual','Cobertura del Gasto'];
+  var rows = ['MODELO RENTISTA - Exportacion de Resultados','Fecha,' + new Date().toLocaleDateString('es-CL'),'','PARAMETROS DE ENTRADA','Variable,Valor'];
+  inputs.forEach(function(inp,i){ rows.push((pNames[i]||'Param '+i)+','+inp.value); });
+  rows.push('','RESULTADOS PRINCIPALES','Indicador,Valor');
+  kpis.forEach(function(kpi,i){ rows.push((rNames[i]||'Resultado '+i)+','+kpi.textContent.trim()); });
+  rows.push('','Modelo Rentista - Danilo Daneri Solano - Santiago Chile 2026','Asistencia tecnica: Claude (Anthropic)');
+  var blob = new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  var a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='ModeloRentista_'+new Date().toISOString().slice(0,10)+'.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
 });
-
-document.getElementById('btn-print').addEventListener('click', function() { window.print(); });
+document.getElementById('btn-print').addEventListener('click', function(){ window.print(); });
 </script>
     <!-- metodologia -->
     <div class="metodologia">
