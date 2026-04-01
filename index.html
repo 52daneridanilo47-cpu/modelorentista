@@ -3,809 +3,1753 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modelo Rentista — Calculadora de Capital y Pensiones</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>MODELO RENTISTA — Calculadora v5.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy:    #0d1b2a;
-    --navy2:   #1a2e45;
-    --blue:    #1e6091;
-    --blue2:   #2980b9;
-    --gold:    #d4a017;
-    --gold2:   #f0c040;
-    --cream:   #f5f0e8;
-    --green:   #27ae60;
-    --red:     #e74c3c;
-    --text:    #e8e4dc;
-    --muted:   #8a9bb0;
-    --border:  rgba(212,160,23,0.25);
-    --card:    rgba(26,46,69,0.7);
-    --card2:   rgba(13,27,42,0.85);
-  }
+:root {
+  --bg: #0a0d0f;
+  --bg2: #111519;
+  --bg3: #181e24;
+  --border: #1e2a34;
+  --accent: #c8a96e;
+  --accent2: #4a9eca;
+  --accent3: #6dbf8a;
+  --danger: #e05c5c;
+  --warn: #e0a44a;
+  --text: #d4dde6;
+  --text2: #7a8fa0;
+  --text3: #4a5f70;
+  --green: #3a7a52;
+  --green-light: #6dbf8a;
+  --gold: #c8a96e;
+  --blue: #4a9eca;
+}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: var(--navy);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
 
-  /* grid bg */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(30,96,145,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(30,96,145,0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-  }
+/* HEADER */
+.header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 40px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(200,169,110,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.header-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.header-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 4px 10px;
+  letter-spacing: 1.5px;
+}
 
-  /* ── HEADER ── */
-  header {
-    padding: 2rem 2.5rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-end; justify-content: space-between;
-    flex-wrap: wrap; gap: 1rem;
-    background: linear-gradient(180deg, rgba(13,27,42,0.95) 0%, transparent 100%);
-  }
-  header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 900;
-    line-height: 1.1;
-    color: var(--cream);
-  }
-  header h1 span { color: var(--gold); }
-  header p {
-    font-size: .78rem; color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: .04em;
-  }
-  .badge {
-    background: var(--gold);
-    color: var(--navy);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .7rem; font-weight: 600;
-    padding: .25rem .65rem;
-    border-radius: 2px;
-    letter-spacing: .08em;
-  }
+/* SEMAPHORE */
+.semaphore-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.semaphore-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text2);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+.sem-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  transition: all 0.4s;
+}
+.sem-dot.active-green { background: var(--green-light); border-color: var(--green-light); box-shadow: 0 0 8px var(--green-light); }
+.sem-dot.active-yellow { background: var(--warn); border-color: var(--warn); box-shadow: 0 0 8px var(--warn); }
+.sem-dot.active-red { background: var(--danger); border-color: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.sem-dot.inactive { background: var(--bg3); }
+.sem-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  margin-left: 8px;
+}
+.sem-status.green { color: var(--green-light); }
+.sem-status.yellow { color: var(--warn); }
+.sem-status.red { color: var(--danger); }
 
-  /* ── LAYOUT ── */
-  main {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 0;
-    min-height: calc(100vh - 90px);
-  }
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  min-height: calc(100vh - 130px);
+}
 
-  /* ── SIDEBAR (CONTROLES) ── */
-  aside {
-    background: var(--card2);
-    border-right: 1px solid var(--border);
-    padding: 1.8rem 1.5rem;
-    display: flex; flex-direction: column; gap: 1.4rem;
-    overflow-y: auto;
-  }
+/* SIDEBAR */
+.sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 24px 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 130px);
+  position: sticky;
+  top: 0;
+}
 
-  .section-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .65rem; font-weight: 600;
-    letter-spacing: .14em;
-    color: var(--gold);
-    text-transform: uppercase;
-    padding-bottom: .5rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: .2rem;
-  }
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title.gold { color: var(--gold); border-color: rgba(200,169,110,0.3); }
+.section-title.blue { color: var(--blue); border-color: rgba(74,158,202,0.3); }
+.section-title.green { color: var(--green-light); border-color: rgba(109,191,138,0.3); }
 
-  .control-group { display: flex; flex-direction: column; gap: .35rem; }
+.param-block { margin-bottom: 20px; }
 
-  .control-group label {
-    font-size: .78rem; font-weight: 500;
-    color: var(--muted);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .control-group label .val {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .82rem; font-weight: 600;
-    color: var(--gold2);
-  }
+.param-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+.param-label {
+  font-size: 12px;
+  color: var(--text2);
+  flex: 1;
+  line-height: 1.3;
+}
+.param-label span {
+  display: block;
+  font-size: 10px;
+  color: var(--text3);
+  font-family: 'IBM Plex Mono', monospace;
+}
+.param-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  min-width: 70px;
+  text-align: right;
+}
 
-  input[type=range] {
-    -webkit-appearance: none; appearance: none;
-    width: 100%; height: 4px;
-    background: var(--navy2);
-    border-radius: 2px; outline: none; cursor: pointer;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px; height: 16px;
-    background: var(--gold);
-    border-radius: 50%;
-    border: 2px solid var(--navy);
-    box-shadow: 0 0 8px rgba(212,160,23,.5);
-    transition: transform .15s;
-  }
-  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  outline: none;
+  margin: 4px 0 10px;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 6px rgba(200,169,110,0.4);
+}
+input[type=range].blue-slider::-webkit-slider-thumb { background: var(--blue); box-shadow: 0 0 6px rgba(74,158,202,0.4); }
+input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-light); box-shadow: 0 0 6px rgba(109,191,138,0.4); }
 
-  /* toggle group */
-  .toggle-group {
-    display: flex; gap: .4rem; flex-wrap: wrap;
-  }
-  .toggle-btn {
-    padding: .3rem .7rem;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .72rem; cursor: pointer;
-    border-radius: 3px;
-    transition: all .2s;
-  }
-  .toggle-btn.active {
-    background: var(--gold);
-    color: var(--navy);
-    border-color: var(--gold);
-    font-weight: 600;
-  }
+.group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+.group-toggle input[type=checkbox] {
+  width: 14px; height: 14px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.group-toggle label {
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 500;
+}
+.group-toggle label.blue { color: var(--blue); }
+.group-toggle label.green { color: var(--green-light); }
+.group-toggle label.gold { color: var(--gold); }
+.group-toggle label.warn { color: var(--warn); }
+.group-toggle label.danger { color: var(--danger); }
 
-  /* ── MAIN PANEL ── */
-  .panel {
-    padding: 1.8rem 2rem;
-    display: flex; flex-direction: column; gap: 1.6rem;
-    overflow-y: auto;
-  }
+.group-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text3);
+  margin-left: 22px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
 
-  /* ── KPI ROW ── */
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
-  }
-  .kpi {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1rem 1.2rem;
-    position: relative; overflow: hidden;
-    transition: transform .2s, border-color .2s;
-  }
-  .kpi:hover { transform: translateY(-2px); border-color: var(--gold); }
-  .kpi::before {
-    content: '';
-    position: absolute; top:0; left:0; right:0; height:2px;
-    background: var(--gold);
-  }
-  .kpi.green::before { background: var(--green); }
-  .kpi.blue::before  { background: var(--blue2); }
-  .kpi.red::before   { background: var(--red); }
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
 
-  .kpi-label {
-    font-size: .68rem; color: var(--muted);
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: .06em; text-transform: uppercase;
-    margin-bottom: .4rem;
-  }
-  .kpi-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem; font-weight: 700;
-    color: var(--cream); line-height: 1;
-  }
-  .kpi-sub {
-    font-size: .7rem; color: var(--muted);
-    margin-top: .3rem;
-  }
+/* MAIN */
+.main {
+  padding: 28px 32px;
+  overflow-y: auto;
+}
 
-  /* ── TABLA PRINCIPAL ── */
-  .table-wrap {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px; overflow: hidden;
-  }
-  .table-title {
-    padding: .9rem 1.2rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .72rem; letter-spacing: .1em;
-    color: var(--gold); text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  table { width: 100%; border-collapse: collapse; }
-  th {
-    padding: .65rem 1rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .67rem; font-weight: 600;
-    letter-spacing: .08em; color: var(--muted);
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    text-align: right;
-  }
-  th:first-child { text-align: left; }
-  td {
-    padding: .6rem 1rem;
-    font-size: .82rem; text-align: right;
-    border-bottom: 1px solid rgba(255,255,255,.04);
-    transition: background .15s;
-  }
-  td:first-child { text-align: left; font-weight: 500; }
-  tr:hover td { background: rgba(212,160,23,.05); }
-  tr.subtotal td {
-    background: rgba(30,96,145,.15);
-    font-weight: 600; color: var(--blue2);
-    border-top: 1px solid rgba(30,96,145,.3);
-  }
-  tr.total td {
-    background: rgba(212,160,23,.12);
-    font-weight: 700; color: var(--gold2);
-    border-top: 1px solid var(--border);
-    font-size: .88rem;
-  }
-  .tag {
-    display: inline-block;
-    padding: .1rem .45rem;
-    border-radius: 2px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .62rem; font-weight: 600;
-  }
-  .tag-mil  { background: rgba(41,128,185,.25); color: #74b9e0; }
-  .tag-civ  { background: rgba(39,174,96,.2);   color: #6fcf97; }
-  .tag-top  { background: rgba(212,160,23,.2);  color: var(--gold2); }
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+.tab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 8px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  user-select: none;
+}
+.tab:hover { color: var(--text2); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* ── BARRA DE PROGRESO ── */
-  .bar-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1.2rem 1.4rem;
-  }
-  .bar-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .72rem; color: var(--gold);
-    text-transform: uppercase; letter-spacing: .1em;
-    margin-bottom: 1rem;
-  }
-  .bar-row {
-    display: grid;
-    grid-template-columns: 160px 1fr 90px;
-    align-items: center;
-    gap: .8rem;
-    margin-bottom: .7rem;
-  }
-  .bar-label { font-size: .76rem; color: var(--muted); }
-  .bar-track {
-    height: 10px;
-    background: var(--navy2);
-    border-radius: 5px; overflow: hidden;
-  }
-  .bar-fill {
-    height: 100%; border-radius: 5px;
-    transition: width .6s cubic-bezier(.4,0,.2,1);
-  }
-  .bar-val {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .74rem; font-weight: 600;
-    text-align: right;
-  }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
-  /* ── ALERT BOX ── */
-  .alert {
-    border-radius: 5px;
-    padding: .85rem 1.1rem;
-    font-size: .8rem; line-height: 1.55;
-    border-left: 3px solid;
-  }
-  .alert-ok  { background: rgba(39,174,96,.12);  border-color: var(--green); color: #a8e6c4; }
-  .alert-warn{ background: rgba(212,160,23,.12); border-color: var(--gold);  color: #f0d080; }
-  .alert-info{ background: rgba(30,96,145,.15);  border-color: var(--blue2); color: #90c8e8; }
+/* SUMMARY CARDS */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.card.gold::before { background: var(--gold); }
+.card.blue::before { background: var(--blue); }
+.card.green::before { background: var(--green-light); }
+.card.warn::before { background: var(--warn); }
+.card.danger::before { background: var(--danger); }
+.card-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.card-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+.card-value.gold { color: var(--gold); }
+.card-value.blue { color: var(--blue); }
+.card-value.green { color: var(--green-light); }
+.card-value.warn { color: var(--warn); }
+.card-value.danger { color: var(--danger); }
+.card-unit {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+.card-note {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 6px;
+  line-height: 1.4;
+}
 
-  /* ── FORMULA BOX ── */
-  .formula {
-    background: var(--navy2);
-    border: 1px solid rgba(30,96,145,.4);
-    border-radius: 4px;
-    padding: .8rem 1.1rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: .78rem; color: var(--blue2);
-    line-height: 1.7;
-  }
+/* GROUPS TABLE */
+.groups-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 12px;
+}
+.groups-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: left;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.groups-table th:not(:first-child) { text-align: right; }
+.groups-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(30,42,52,0.5);
+  vertical-align: middle;
+}
+.groups-table td:not(:first-child) { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+.groups-table tr:hover td { background: rgba(255,255,255,0.02); }
+.groups-table tr.total td {
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+  font-weight: 600;
+  color: var(--text);
+}
+.group-name {
+  font-weight: 500;
+  color: var(--text);
+}
+.group-tag {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.tag-gold { background: rgba(200,169,110,0.15); color: var(--gold); }
+.tag-blue { background: rgba(74,158,202,0.15); color: var(--blue); }
+.tag-green { background: rgba(109,191,138,0.15); color: var(--green-light); }
+.tag-warn { background: rgba(224,164,74,0.15); color: var(--warn); }
+.tag-danger { background: rgba(224,92,92,0.15); color: var(--danger); }
+.tag-gray { background: rgba(122,143,160,0.15); color: var(--text2); }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 860px) {
-    main { grid-template-columns: 1fr; }
-    aside { border-right: none; border-bottom: 1px solid var(--border); }
-  }
+.val-gold { color: var(--gold); }
+.val-blue { color: var(--blue); }
+.val-green { color: var(--green-light); }
+.val-warn { color: var(--warn); }
+.val-danger { color: var(--danger); }
 
-  /* animación entrada */
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(12px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-  .kpi, .table-wrap, .bar-section, .alert {
-    animation: fadeUp .4s ease both;
-  }
+/* FORMULA BOX */
+.formula-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.8;
+}
+.formula-box .f-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.formula-box .f-eq {
+  color: var(--accent);
+  font-size: 13px;
+}
 
-  .num-green { color: var(--green); }
-  .num-gold  { color: var(--gold2); }
-  .num-red   { color: var(--red); }
+/* TIMELINE */
+.timeline-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-bottom: 24px;
+}
+.timeline-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 6px 10px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+.timeline-table th:first-child { text-align: left; }
+.timeline-table td {
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 7px 10px;
+  text-align: right;
+  border-bottom: 1px solid rgba(30,42,52,0.4);
+}
+.timeline-table td:first-child { text-align: left; color: var(--text2); }
+.timeline-table tr.milestone td { background: rgba(200,169,110,0.05); }
+.timeline-table tr.milestone td:first-child { color: var(--gold); font-weight: 600; }
 
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: .2rem 0;
-  }
+/* STRESS TEST */
+.stress-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stress-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+}
+.stress-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+.stress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(30,42,52,0.5);
+  font-size: 11px;
+}
+.stress-row:last-child { border-bottom: none; }
+.stress-row .s-label { color: var(--text2); }
+.stress-row .s-val { font-family: 'IBM Plex Mono', monospace; }
+
+/* ALERT BOX */
+.alert {
+  border: 1px solid;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.alert.warn { border-color: rgba(224,164,74,0.4); background: rgba(224,164,74,0.06); color: var(--warn); }
+.alert.info { border-color: rgba(74,158,202,0.4); background: rgba(74,158,202,0.06); color: var(--blue); }
+.alert.good { border-color: rgba(109,191,138,0.4); background: rgba(109,191,138,0.06); color: var(--green-light); }
+.alert.bad { border-color: rgba(224,92,92,0.4); background: rgba(224,92,92,0.06); color: var(--danger); }
+.alert-icon { font-size: 14px; flex-shrink: 0; }
+.alert span { color: var(--text2); }
+
+/* BAR CHART */
+.bar-chart { margin-bottom: 24px; }
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.bar-label {
+  font-size: 11px;
+  color: var(--text2);
+  width: 160px;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+.bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+.bar-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
+  width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* GENDER GAP */
+.gender-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.gender-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+}
+.gender-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.gender-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+/* SECTION HEADING */
+.sec-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.sec-desc {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* COVERAGE METER */
+.coverage-meter {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.cov-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.cov-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.cov-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+.cov-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* FOOTNOTE */
+.footnote {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.6;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  margin-top: 24px;
+}
+.footnote strong { color: var(--text2); }
+
+/* EXPORT */
+.export-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { border-color: var(--accent); color: var(--accent); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { max-height: none; position: static; }
+  .cards-grid { grid-template-columns: 1fr 1fr; }
+  .stress-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .header { padding: 20px; }
+  .main { padding: 20px; }
+  .cards-grid { grid-template-columns: 1fr; }
+}
+
+/* SCROLL */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>MODELO <span>RENTISTA</span></h1>
-    <p>Calculadora de Capital, Pensiones e Intereses · v4.0 · Marzo 2026</p>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">MODELO RENTISTA</div>
+      <div class="header-sub">Calculadora de Capital, Pensiones y Sostenibilidad · v5.0 · 2026</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px;">Danilo Daneri Solano · Asistencia: Claude (Anthropic)</div>
+    </div>
+    <div class="header-badge">HERRAMIENTA INTERACTIVA</div>
   </div>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem">
-    <span class="badge">HERRAMIENTA INTERACTIVA</span>
-    <span style="font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace">Danilo Daneri Solano · Asistencia: Claude (Anthropic)</span>
+  <div class="semaphore-bar">
+    <span class="semaphore-label">RAAB —</span>
+    <div class="sem-dot" id="sem-green"></div>
+    <div class="sem-dot" id="sem-yellow"></div>
+    <div class="sem-dot" id="sem-red"></div>
+    <span class="sem-status" id="sem-text">—</span>
   </div>
-</header>
+</div>
 
-<main>
-  <!-- ── SIDEBAR ── -->
-  <aside>
+<!-- LAYOUT -->
+<div class="layout">
 
-    <div>
-      <div class="section-label">Parámetros del sistema</div>
-      <div class="control-group" style="margin-top:.6rem">
-        <label>Tasa de retorno real anual <span class="val" id="val-tasa">5,0%</span></label>
-        <input type="range" id="sl-tasa" min="3" max="9" step="0.1" value="5">
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <!-- SISTEMA BASE -->
+  <div class="section-title gold">⚙ Parámetros del Sistema</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">Tasa retorno real anual<span>r — base de cálculo ×240</span></div>
+      <div class="param-val" id="lbl-r">5,0%</div>
+    </div>
+    <input type="range" id="r" min="2" max="8" step="0.5" value="5">
+
+    <div class="param-row">
+      <div class="param-label">IPC anual (inflación)<span>Para reajuste de pensiones</span></div>
+      <div class="param-val" id="lbl-ipc">3,5%</div>
+    </div>
+    <input type="range" id="ipc" min="2" max="7" step="0.5" value="3.5">
+
+    <div class="param-row">
+      <div class="param-label">Piso pensión (PBS)<span>$ miles/mes, referencia 2024</span></div>
+      <div class="param-val" id="lbl-piso">$539K</div>
+    </div>
+    <input type="range" id="piso" min="300" max="800" step="10" value="539">
+
+    <div class="param-row">
+      <div class="param-label">Años de retiro promedio<span>Esperanza de vida post-jubilación</span></div>
+      <div class="param-val" id="lbl-anos">20</div>
+    </div>
+    <input type="range" id="anos" min="10" max="35" step="1" value="20">
+  </div>
+
+  <hr class="divider">
+
+  <!-- GRUPO 1: UNIFORMADOS -->
+  <div class="section-title gold">① Uniformados CAPREDENA/DIPRECA</div>
+  <div class="group-toggle"><input type="checkbox" id="g-uni" checked><label class="gold" for="g-uni">Incluir uniformados</label></div>
+  <div class="group-sub">Sin patrimonio propio — deuda histórica de promesa</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)<span></span></div>
+      <div class="param-val" id="lbl-uni-n">177K</div>
+    </div>
+    <input type="range" id="uni-n" min="100" max="250" step="1" value="177">
+    <div class="param-row">
+      <div class="param-label">Último sueldo activo ($ miles)<span>Base para fondo ×240</span></div>
+      <div class="param-val" id="lbl-uni-s">$1.130K</div>
+    </div>
+    <input type="range" id="uni-s" min="600" max="2000" step="10" value="1130">
+  </div>
+
+  <hr class="divider">
+
+  <!-- GRUPO 2: PROFESORES -->
+  <div class="section-title blue">② Profesores del Sistema Público</div>
+  <div class="group-toggle"><input type="checkbox" id="g-prof" checked><label class="blue" for="g-prof">Incluir profesores</label></div>
+  <div class="group-sub">Subvalorados — deuda de cotización baja por sueldo bajo</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-prof-n">200K</div>
+    </div>
+    <input type="range" class="blue-slider" id="prof-n" min="100" max="350" step="1" value="200">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)<span>Compensación adicional</span></div>
+      <div class="param-val" id="lbl-prof-tu">$400K</div>
+    </div>
+    <input type="range" class="blue-slider" id="prof-tu" min="200" max="700" step="10" value="400">
+  </div>
+
+  <hr class="divider">
+
+  <!-- GRUPO 3: PUEBLOS ORIGINARIOS -->
+  <div class="section-title green">③ Pueblos Originarios</div>
+  <div class="group-toggle"><input type="checkbox" id="g-orig" checked><label class="green" for="g-orig">Incluir pueblos originarios</label></div>
+  <div class="group-sub">Exclusión estructural — informalidad >33%</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-orig-n">100K</div>
+    </div>
+    <input type="range" class="green-slider" id="orig-n" min="50" max="200" step="1" value="100">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-orig-tu">$400K</div>
+    </div>
+    <input type="range" class="green-slider" id="orig-tu" min="200" max="700" step="10" value="400">
+    <div class="param-row">
+      <div class="param-label">Tasa recuperación B2<span>Alta informalidad = menor retorno</span></div>
+      <div class="param-val" id="lbl-orig-rec">35%</div>
+    </div>
+    <input type="range" class="green-slider" id="orig-rec" min="10" max="80" step="5" value="35">
+  </div>
+
+  <hr class="divider">
+
+  <!-- GRUPO 4: CIVILES AFP -->
+  <div class="section-title" style="color:#9b7eca;border-color:rgba(155,126,202,0.3);">④ Jubilados Civiles AFP</div>
+  <div class="group-toggle"><input type="checkbox" id="g-civil" checked><label style="color:#9b7eca;" for="g-civil">Incluir civiles AFP</label></div>
+  <div class="group-sub">La mayoría — pensiones bajas pese a años de cotización</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° jubilados (miles)</div>
+      <div class="param-val" id="lbl-civ-n">1.200K</div>
+    </div>
+    <input type="range" id="civ-n" min="800" max="1600" step="10" value="1200" style="--thumb:#9b7eca">
+    <div class="param-row">
+      <div class="param-label">Capital propio promedio ($ mill.)</div>
+      <div class="param-val" id="lbl-civ-k">$22M</div>
+    </div>
+    <input type="range" id="civ-k" min="5" max="60" step="1" value="22">
+    <div class="param-row">
+      <div class="param-label">Sueldo previo prom. ($ miles)</div>
+      <div class="param-val" id="lbl-civ-s">$700K</div>
+    </div>
+    <input type="range" id="civ-s" min="400" max="1500" step="10" value="700">
+    <div class="param-row">
+      <div class="param-label">Tasa de reemplazo objetivo</div>
+      <div class="param-val" id="lbl-civ-tr">80%</div>
+    </div>
+    <input type="range" id="civ-tr" min="50" max="100" step="5" value="80">
+    <div class="param-row">
+      <div class="param-label">Top-up máximo aplicable ($ miles)<span>Tope prudente del sistema</span></div>
+      <div class="param-val" id="lbl-civ-tmax">$450K</div>
+    </div>
+    <input type="range" id="civ-tmax" min="200" max="700" step="10" value="450">
+    <div class="param-row">
+      <div class="param-label">Tasa recuperación B2</div>
+      <div class="param-val" id="lbl-civ-rec">60%</div>
+    </div>
+    <input type="range" id="civ-rec" min="20" max="90" step="5" value="60">
+  </div>
+
+  <hr class="divider">
+
+  <!-- NUEVOS BENEFICIARIOS -->
+  <div class="section-title warn">⑤ Nuevos Beneficiarios</div>
+  <div class="group-sub" style="margin-left:0;margin-bottom:12px;">Trayectorias quebradas — el modelo debe reconocerlas</div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-pesc" checked><label class="warn" for="g-pesc">Pescadores artesanales</label></div>
+  <div class="group-sub">Inf. alta, ingresos estacionales, desgaste físico</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-pesc-n">90K</div>
+    </div>
+    <input type="range" id="pesc-n" min="20" max="150" step="1" value="90">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-pesc-tu">$350K</div>
+    </div>
+    <input type="range" id="pesc-tu" min="150" max="600" step="10" value="350">
+  </div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-pirq" checked><label class="warn" for="g-pirq">Pirquineros / pequeña minería</label></div>
+  <div class="group-sub">Ingreso irregular, alto desgaste, informalidad endémica</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-pirq-n">45K</div>
+    </div>
+    <input type="range" id="pirq-n" min="10" max="100" step="1" value="45">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-pirq-tu">$350K</div>
+    </div>
+    <input type="range" id="pirq-tu" min="150" max="600" step="10" value="350">
+  </div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-temp" checked><label class="warn" for="g-temp">Temporeros/as agrícolas</label></div>
+  <div class="group-sub">Cotización discontinua, lagunas sistemáticas</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-temp-n">200K</div>
+    </div>
+    <input type="range" id="temp-n" min="50" max="400" step="5" value="200">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-temp-tu">$300K</div>
+    </div>
+    <input type="range" id="temp-tu" min="150" max="500" step="10" value="300">
+  </div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-feri" checked><label class="warn" for="g-feri">Feriantes y comercio informal</label></div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-feri-n">120K</div>
+    </div>
+    <input type="range" id="feri-n" min="30" max="250" step="5" value="120">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-feri-tu">$300K</div>
+    </div>
+    <input type="range" id="feri-tu" min="150" max="500" step="10" value="300">
+  </div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-cuida" checked><label class="danger" for="g-cuida">Cuidadoras no remuneradas</label></div>
+  <div class="group-sub">Brecha de género — lagunas por cuidado familiar</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)<span>~80% mujeres</span></div>
+      <div class="param-val" id="lbl-cuida-n">250K</div>
+    </div>
+    <input type="range" id="cuida-n" min="50" max="500" step="5" value="250">
+    <div class="param-row">
+      <div class="param-label">Años laguna prom.</div>
+      <div class="param-val" id="lbl-cuida-lag">8</div>
+    </div>
+    <input type="range" id="cuida-lag" min="2" max="20" step="1" value="8">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-cuida-tu">$380K</div>
+    </div>
+    <input type="range" id="cuida-tu" min="150" max="600" step="10" value="380">
+  </div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-trans" checked><label class="warn" for="g-trans">Transportistas / choferes</label></div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-trans-n">80K</div>
+    </div>
+    <input type="range" id="trans-n" min="20" max="200" step="5" value="80">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-trans-tu">$320K</div>
+    </div>
+    <input type="range" id="trans-tu" min="150" max="500" step="10" value="320">
+  </div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-casa" checked><label class="danger" for="g-casa">Trabajadoras de casa particular</label></div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-casa-n">150K</div>
+    </div>
+    <input type="range" id="casa-n" min="50" max="300" step="5" value="150">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-casa-tu">$380K</div>
+    </div>
+    <input type="range" id="casa-tu" min="150" max="600" step="10" value="380">
+  </div>
+
+  <div class="group-toggle"><input type="checkbox" id="g-indep" checked><label style="color:#c88ae0;" for="g-indep">Independientes / cuenta propia</label></div>
+  <div class="group-sub">Densidad cotización baja, capital acumulado mínimo</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-indep-n">350K</div>
+    </div>
+    <input type="range" id="indep-n" min="100" max="700" step="10" value="350">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-indep-tu">$350K</div>
+    </div>
+    <input type="range" id="indep-tu" min="150" max="600" step="10" value="350">
+  </div>
+
+  <hr class="divider">
+
+  <!-- PARÁMETROS BRECHA GÉNERO -->
+  <div class="section-title danger">⑥ Brecha de Género</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">Esperanza vida mujeres post-65<span>Años adicionales de retiro</span></div>
+      <div class="param-val" id="lbl-vida-m">22</div>
+    </div>
+    <input type="range" id="vida-m" min="15" max="30" step="1" value="22">
+    <div class="param-row">
+      <div class="param-label">Esperanza vida hombres post-65</div>
+      <div class="param-val" id="lbl-vida-h">18</div>
+    </div>
+    <input type="range" id="vida-h" min="12" max="28" step="1" value="18">
+  </div>
+
+</div>
+<!-- END SIDEBAR -->
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('resumen')">Resumen</div>
+    <div class="tab" onclick="showTab('grupos')">Grupos</div>
+    <div class="tab" onclick="showTab('nuevos')">Nuevos Beneficiarios</div>
+    <div class="tab" onclick="showTab('sostenibilidad')">Sostenibilidad</div>
+    <div class="tab" onclick="showTab('stress')">Estrés</div>
+    <div class="tab" onclick="showTab('genero')">Brecha Género</div>
+    <div class="tab" onclick="showTab('formula')">Fórmulas</div>
+  </div>
+
+  <!-- TAB: RESUMEN -->
+  <div id="tab-resumen" class="tab-content active">
+    <div class="sec-head">Resumen del Sistema</div>
+    <div class="sec-desc">Capital total necesario, gasto anual y cobertura del sistema con todos los grupos activos.</div>
+
+    <div class="coverage-meter">
+      <div>
+        <div class="card-label">COBERTURA</div>
+        <div class="cov-number" id="cov-num" style="color:var(--green-light)">—</div>
+        <div class="cov-label">Interés anual ÷ Gasto anual</div>
       </div>
-      <div class="control-group">
-        <label>Piso de pensión ($ miles/mes) <span class="val" id="val-piso">539</span></label>
-        <input type="range" id="sl-piso" min="300" max="900" step="10" value="539">
+      <div style="flex:1">
+        <div class="cov-track" style="margin-bottom:6px;">
+          <div class="cov-fill" id="cov-bar" style="background:var(--green-light);width:0%"></div>
+        </div>
+        <div id="cov-alert" class="alert good" style="margin:0;font-size:11px;">
+          <span class="alert-icon">✓</span><span id="cov-msg">—</span>
+        </div>
       </div>
     </div>
 
-    <hr class="divider">
-
-    <div>
-      <div class="section-label">Jubilados civiles (AFP)</div>
-      <div class="control-group">
-        <label>N° jubilados civiles (miles) <span class="val" id="val-nciv">1.200</span></label>
-        <input type="range" id="sl-nciv" min="500" max="2000" step="50" value="1200">
+    <div class="cards-grid">
+      <div class="card gold">
+        <div class="card-label">Capital Total AFJ</div>
+        <div class="card-value gold" id="kpi-capital">—</div>
+        <div class="card-unit">billones CLP</div>
+        <div class="card-note" id="kpi-capital-note">—</div>
       </div>
-      <div class="control-group">
-        <label>Capital propio prom. ($ millones) <span class="val" id="val-cprop">22</span></label>
-        <input type="range" id="sl-cprop" min="5" max="80" step="1" value="22">
+      <div class="card blue">
+        <div class="card-label">Gasto Anual Pensiones</div>
+        <div class="card-value blue" id="kpi-gasto">—</div>
+        <div class="card-unit">billones CLP / año</div>
+        <div class="card-note" id="kpi-gasto-note">—</div>
       </div>
-      <div class="control-group">
-        <label>Sueldo previo prom. ($ miles/mes) <span class="val" id="val-sciv">700</span></label>
-        <input type="range" id="sl-sciv" min="400" max="1500" step="50" value="700">
+      <div class="card green">
+        <div class="card-label">Interés Real Anual (5%)</div>
+        <div class="card-value green" id="kpi-interes">—</div>
+        <div class="card-unit">billones CLP / año</div>
+        <div class="card-note">Capital × tasa de retorno real</div>
       </div>
-      <div class="control-group">
-        <label>Tasa de reemplazo objetivo <span class="val" id="val-reempciv">80%</span></label>
-        <input type="range" id="sl-reempciv" min="50" max="100" step="5" value="80">
+      <div class="card warn">
+        <div class="card-label">Total Beneficiarios</div>
+        <div class="card-value warn" id="kpi-personas">—</div>
+        <div class="card-unit">personas</div>
+        <div class="card-note" id="kpi-personas-note">—</div>
       </div>
-    </div>
-
-    <hr class="divider">
-
-    <div>
-      <div class="section-label">Uniformados (CAPREDENA + DIPRECA)</div>
-      <div class="control-group">
-        <label>N° uniformados (miles) <span class="val" id="val-nmil">177</span></label>
-        <input type="range" id="sl-nmil" min="50" max="300" step="5" value="177">
+      <div class="card gold">
+        <div class="card-label">Capital Nuevos Beneficiarios</div>
+        <div class="card-value gold" id="kpi-nuevos">—</div>
+        <div class="card-unit">billones CLP</div>
+        <div class="card-note">Pescadores, pirquineros, cuidadoras...</div>
       </div>
-      <div class="control-group">
-        <label>Pensión promedio ($ miles/mes) <span class="val" id="val-pmil">1.454</span></label>
-        <input type="range" id="sl-pmil" min="800" max="2500" step="50" value="1454">
-      </div>
-      <div class="control-group">
-        <label>Cotización propia (% de pensión) <span class="val" id="val-cotmil">6,38%</span></label>
-        <input type="range" id="sl-cotmil" min="0" max="30" step="0.5" value="6.38">
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <div>
-      <div class="section-label">Vista de tabla</div>
-      <div class="toggle-group">
-        <button class="toggle-btn active" onclick="setView('resumen')">Resumen</button>
-        <button class="toggle-btn" onclick="setView('detalle')">Detalle cohortes</button>
-        <button class="toggle-btn" onclick="setView('flujos')">Flujos anuales</button>
+      <div class="card blue">
+        <div class="card-label">Retorno B2 Anual Est.</div>
+        <div class="card-value blue" id="kpi-b2">—</div>
+        <div class="card-unit">billones CLP</div>
+        <div class="card-note">Capital retorna al fallecer jubilado</div>
       </div>
     </div>
 
-    <hr class="divider">
-
-    <div class="formula">
-      <div style="color:var(--gold);margin-bottom:.4rem;font-size:.68rem;letter-spacing:.08em">FÓRMULA BASE</div>
-      C_nec = Pensión × 12 ÷ r<br>
-      TU = max(0, C_nec − C_prop)<br>
-      Pensión = C_total × r ÷ 12<br>
-      <span style="color:var(--muted)">r = tasa real anual</span>
-    </div>
-
-  </aside>
-
-  <!-- ── PANEL PRINCIPAL ── -->
-  <div class="panel">
-
-    <!-- KPIs -->
-    <div class="kpi-row" id="kpi-row"></div>
-
-    <!-- alert -->
     <div id="alert-box"></div>
 
-    <!-- tabla -->
-    <div class="table-wrap">
-      <div class="table-title">
-        <span id="tabla-titulo">Resumen del Sistema</span>
-        <span style="color:var(--muted);font-size:.65rem" id="tabla-sub">Valores en $ Billones CLP</span>
+    <div class="formula-box">
+      <div class="f-title">Regla Central — ×240</div>
+      <div class="f-eq">C_nec = Pensión × 12 ÷ r &nbsp;=&nbsp; Pensión × <span id="mult-show">240</span></div>
+      <div style="margin-top:6px;color:var(--text3);">
+        TU = max(0, C_nec − C_prop) &nbsp;·&nbsp; Cobertura = Interés anual ÷ Gasto anual &nbsp;·&nbsp; r = <span id="r-show">5%</span> real anual
       </div>
-      <div id="tabla-contenido"></div>
     </div>
 
-    <!-- barras -->
-    <div class="bar-section" id="barra-seccion"></div>
-
+    <div class="bar-chart">
+      <div class="section-title" style="margin-bottom:14px;">Distribución del Capital por Grupo</div>
+      <div id="bar-container"></div>
+    </div>
   </div>
-</main>
+
+  <!-- TAB: GRUPOS -->
+  <div id="tab-grupos" class="tab-content">
+    <div class="sec-head">Cuatro Grupos Históricos</div>
+    <div class="sec-desc">Los cuatro grupos con deudas reconocidas en el modelo. Cada uno tiene su mecanismo de injusticia y su fondo calculado.</div>
+    <table class="groups-table">
+      <thead>
+        <tr>
+          <th>Grupo</th>
+          <th>Personas</th>
+          <th>Pensión obj.</th>
+          <th>Capital/persona</th>
+          <th>Fondo total</th>
+          <th>Tipo deuda</th>
+          <th>Recup. B2</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-grupos">
+      </tbody>
+    </table>
+    <div class="footnote">
+      <strong>Nota metodológica:</strong> Capital/persona calculado con la regla ×<span id="mult-grupos">240</span> (Pensión × 12 ÷ r). El top-up (TU) es el capital adicional que el sistema presta al trabajador para alcanzar el capital necesario. Para los civiles AFP se aplica el tope prudente de la AFJ. Fuentes: CAPREDENA 2023, Superintendencia de Pensiones, INE CASEN 2022.
+    </div>
+  </div>
+
+  <!-- TAB: NUEVOS -->
+  <div id="tab-nuevos" class="tab-content">
+    <div class="sec-head">Nuevos Beneficiarios</div>
+    <div class="sec-desc">Grupos históricamente excluidos con trayectorias laborales quebradas. El libro los reconoce — la calculadora ahora los cuenta.</div>
+    <table class="groups-table">
+      <thead>
+        <tr>
+          <th>Grupo</th>
+          <th>Personas</th>
+          <th>Top-up/mes</th>
+          <th>Capital/persona</th>
+          <th>Fondo total</th>
+          <th>Perfil</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-nuevos">
+      </tbody>
+    </table>
+    <div class="footnote">
+      <strong>Nota:</strong> Estos grupos no tienen datos actuariales completos todavía — las cifras son estimaciones de partida para el debate técnico. El capital/persona se calcula como Top-up × 240. La fase piloto debe medir densidad de cotización real, lagunas, esperanza de vida diferenciada y tasa de recuperación B2 por grupo.
+    </div>
+  </div>
+
+  <!-- TAB: SOSTENIBILIDAD -->
+  <div id="tab-sostenibilidad" class="tab-content">
+    <div class="sec-head">Tres Horizontes de Sostenibilidad</div>
+    <div class="sec-desc">El modelo se verifica en tres horizontes: superávit activo (1-15 años), reserva B3 toma el relevo (16-35), y régimen permanente autosuficiente (36+).</div>
+
+    <div class="cards-grid" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="card green">
+        <div class="card-label">Horizonte 1 · Años 1–15</div>
+        <div class="card-value green" style="font-size:18px;">Superávit activo</div>
+        <div class="card-note">El retorno del capital supera el gasto. Superávit se acumula en B3.</div>
+      </div>
+      <div class="card blue">
+        <div class="card-label">Horizonte 2 · Años 16–35</div>
+        <div class="card-value blue" style="font-size:18px;">B3 toma el relevo</div>
+        <div class="card-note">La reserva acumulada cubre la brecha. Flujo B2 opera con plena potencia.</div>
+      </div>
+      <div class="card gold">
+        <div class="card-label">Horizonte 3 · Año 36+</div>
+        <div class="card-value gold" style="font-size:18px;">Régimen permanente</div>
+        <div class="card-note">Flujo B2 iguala o supera la originación requerida. El sistema no se vacía.</div>
+      </div>
+    </div>
+
+    <table class="timeline-table">
+      <thead>
+        <tr>
+          <th>Año</th>
+          <th>Fondo acum. (bill.)</th>
+          <th>Gasto anual (bill.)</th>
+          <th>Interés (bill.)</th>
+          <th>Superávit (bill.)</th>
+          <th>Nuevos jubil. absorbibles</th>
+          <th>Estado RAAB</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-timeline"></tbody>
+    </table>
+
+    <div class="formula-box" style="border-left-color:var(--blue)">
+      <div class="f-title">Flujo B2 — Sostenibilidad por Retorno de Capital</div>
+      <div class="f-eq">Retorno B2 anual = Jubilados_año × (1/Anos_retiro) × Capital_B2_promedio</div>
+      <div style="margin-top:6px;color:var(--text3)">Con <span id="b2-jubilados">1.200.000</span> jubilados civiles y <span id="b2-anos">20</span> años prom. de retiro → ~60.000 fallecidos/año devuelven capital al fondo. Este mecanismo hace innecesario el apoyo fiscal continuo.</div>
+    </div>
+  </div>
+
+  <!-- TAB: STRESS -->
+  <div id="tab-stress" class="tab-content">
+    <div class="sec-head">Pruebas de Estrés</div>
+    <div class="sec-desc">¿Qué pasa si el retorno baja? ¿Si la inflación sube? ¿Si la gente vive 30 años jubilada? El modelo responde con números, no con fe.</div>
+
+    <div class="stress-grid">
+      <div class="stress-card">
+        <div class="stress-title">📉 Retorno Real Bajo</div>
+        <div id="stress-retorno"></div>
+      </div>
+      <div class="stress-card">
+        <div class="stress-title">🌡 Inflación Alta</div>
+        <div id="stress-ipc"></div>
+      </div>
+      <div class="stress-card">
+        <div class="stress-title">👴 Longevidad Extrema</div>
+        <div id="stress-longevidad"></div>
+      </div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--warn)">
+      <div class="f-title">RAAB — Regla Automática Anti-Brecha</div>
+      <div class="f-eq">🟢 VERDE: Cobertura ≥100% → Sistema normal</div>
+      <div class="f-eq">🟡 AMARILLO: Cobertura 80–99% → Congela componente real del reajuste</div>
+      <div class="f-eq">🔴 ROJO: Cobertura &lt;80% → Suspende distribuciones adicionales, modo defensa</div>
+      <div style="margin-top:8px;color:var(--text3)">La RAAB no recorta pensiones en términos reales — congela su crecimiento. El IPC siempre se protege.</div>
+    </div>
+
+    <div class="stress-grid">
+      <div class="stress-card">
+        <div class="stress-title">💸 Costo Actuarial B2-Solidario</div>
+        <div id="stress-b2"></div>
+      </div>
+      <div class="stress-card">
+        <div class="stress-title">♂♀ Capital por Género</div>
+        <div id="stress-genero"></div>
+      </div>
+      <div class="stress-card">
+        <div class="stress-title">📊 Multiplicador por Tasa</div>
+        <div id="stress-mult"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: GENERO -->
+  <div id="tab-genero" class="tab-content">
+    <div class="sec-head">Brecha de Género</div>
+    <div class="sec-desc">Las mujeres tienen lagunas más largas por cuidado, pensiones más bajas y viven más años. El modelo debe reconocerlo con números, no solo con palabras.</div>
+
+    <div class="gender-grid">
+      <div class="gender-card">
+        <div class="gender-label">Capital necesario — Mujer</div>
+        <div class="gender-val" id="gen-k-m" style="color:var(--danger)">—</div>
+        <div class="card-unit">por persona (piso PBS)</div>
+        <div class="card-note" style="margin-top:8px;" id="gen-años-m">— años de retiro esperados</div>
+      </div>
+      <div class="gender-card">
+        <div class="gender-label">Capital necesario — Hombre</div>
+        <div class="gender-val" id="gen-k-h" style="color:var(--blue)">—</div>
+        <div class="card-unit">por persona (piso PBS)</div>
+        <div class="card-note" style="margin-top:8px;" id="gen-años-h">— años de retiro esperados</div>
+      </div>
+    </div>
+
+    <div class="cards-grid" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="card danger">
+        <div class="card-label">Brecha de capital</div>
+        <div class="card-value danger" id="gen-brecha">—</div>
+        <div class="card-unit">millones CLP adicionales</div>
+        <div class="card-note">Capital extra que necesita la mujer por vivir más años</div>
+      </div>
+      <div class="card warn">
+        <div class="card-label">Laguna por cuidado (prom.)</div>
+        <div class="card-value warn" id="gen-laguna">—</div>
+        <div class="card-unit">años sin cotizar</div>
+        <div class="card-note">Cuidadoras no remuneradas promedio</div>
+      </div>
+      <div class="card blue">
+        <div class="card-label">Impacto en capital acumulado</div>
+        <div class="card-value blue" id="gen-impacto">—</div>
+        <div class="card-unit">millones perdidos por laguna</div>
+        <div class="card-note">A tasa de cotización 10% sobre PBS</div>
+      </div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--danger)">
+      <div class="f-title">Goldin — Corrección de Brecha de Género</div>
+      <div class="f-eq">K_adicional_mujer = PBS × 12 × (Vida_mujer − Vida_hombre) ÷ r</div>
+      <div style="margin-top:8px;color:var(--text3)">El segundo 30% de la Regla 30/30/40 (fondo B2) existe para corregir esto. Una laguna por cuidado es equivalente a una laguna por cesantía involuntaria — el mecanismo top-up recuperable completa el capital faltante bajo reglas objetivas.</div>
+    </div>
+
+    <div id="genero-alert" class="alert warn" style="margin-top:16px;">
+      <span class="alert-icon">⚠</span>
+      <span id="genero-msg">—</span>
+    </div>
+  </div>
+
+  <!-- TAB: FORMULA -->
+  <div id="tab-formula" class="tab-content">
+    <div class="sec-head">Fórmulas y Metodología</div>
+    <div class="sec-desc">Las reglas matemáticas que sostienen el modelo. Cada una puede verificarse con una calculadora.</div>
+
+    <div class="formula-box">
+      <div class="f-title">1. Regla del ×240 — Capital Necesario</div>
+      <div class="f-eq">C_nec = Pensión_mensual × 12 ÷ r = Pensión × <span id="f-mult">240</span></div>
+      <div style="color:var(--text3);margin-top:6px;">Con r=5%: multiplicador 240. Con r=4%: 300. Con r=6%: 200. El capital nunca disminuye — la pensión se paga con el retorno real.</div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--blue)">
+      <div class="f-title">2. Top-Up (TU) — Capital del Estado</div>
+      <div class="f-eq">TU = max(0, C_nec − C_prop)</div>
+      <div style="color:var(--text3);margin-top:6px;">Monto adicional que el sistema presta/otorga al trabajador. Para civiles AFP: top-up máximo aplicado = min(TU_teórico, Tope_prudente × 240). El capital propio ya acumulado se respeta íntegro.</div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--green-light)">
+      <div class="f-title">3. Cobertura del Sistema</div>
+      <div class="f-eq">Cobertura = (Capital_total × r) ÷ Gasto_anual_pensiones</div>
+      <div style="color:var(--text3);margin-top:6px;">≥100%: sistema sustentable. 80–99%: señal RAAB amarilla. &lt;80%: RAAB roja, modo defensa. El capital genera el flujo — no se toca el stock.</div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--warn)">
+      <div class="f-title">4. Regla 30/30/40</div>
+      <div class="f-eq">B1 (30%) → Financiamiento productivo con retorno</div>
+      <div class="f-eq">B2 (30%) → Corrección lagunas con retorno (top-up recuperable)</div>
+      <div class="f-eq">B3 (40%) → Reserva anti-crisis</div>
+      <div style="color:var(--text3);margin-top:6px;">Distribución sujeta a calibración actuarial en fase piloto. Nota del autor: es propuesta de diseño, no certeza cerrada.</div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--accent2)">
+      <div class="f-title">5. Flujo B2 — Sostenibilidad por Retorno de Capital</div>
+      <div class="f-eq">Retorno_B2 = (N_jubilados ÷ Anos_retiro) × Capital_B2_promedio</div>
+      <div style="color:var(--text3);margin-top:6px;">El capital prestado por el sistema retorna al morir el jubilado (descontada herencia del capital propio). Este flujo crece con el tiempo y hace autosuficiente al sistema en el Horizonte 3.</div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--danger)">
+      <div class="f-title">6. Brecha de Género</div>
+      <div class="f-eq">K_extra_mujer = PBS × 12 × ΔVida ÷ r</div>
+      <div style="color:var(--text3);margin-top:6px;">ΔVida = diferencia en años de retiro entre mujer y hombre. Este capital adicional justifica la corrección de lagunas por cuidado en el B2.</div>
+    </div>
+
+    <div class="footnote">
+      <strong>Advertencia metodológica:</strong> Este modelo es estático en su cálculo base. Las proyecciones de sostenibilidad incluyen crecimiento del IPC y nuevos jubilados anuales. Los números son puntos de partida para el debate técnico — la calibración definitiva corresponde al equipo actuarial de la fase piloto. Fuentes: CMF, Superintendencia de Pensiones, DIPRES, CAPREDENA 2023–2024, INE CASEN 2022, BCCh.
+    </div>
+  </div>
+
+  <!-- EXPORT -->
+  <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);">
+    <div class="export-bar">
+      <button class="btn primary" onclick="exportCSV()">⇓ Exportar CSV</button>
+      <button class="btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;">
+      v5.0 · Danilo Daneri Solano · Santiago de Chile, 2026 · Asistencia: Claude (Anthropic) · El debate es bienvenido. La carpeta de evidencia está abierta.
+    </div>
+  </div>
+
+</div>
+<!-- END MAIN -->
+</div>
 
 <script>
-// ── ESTADO ────────────────────────────────────────────────────────────────────
-const S = {
-  tasa: 5,
-  piso: 539,          // miles $/mes
-  nCiv: 1200,         // miles personas
-  cProp: 22,          // $ millones promedio por jubilado civil
-  sCiv: 700,          // miles $/mes sueldo previo
-  reempCiv: 80,       // %
-  nMil: 177,          // miles
-  pMil: 1454,         // miles $/mes pensión promedio
-  cotMil: 6.38,       // % cotización propia
-  view: 'resumen',
-};
+// ======== STATE ========
+let S = {};
 
-// ── HELPERS ──────────────────────────────────────────────────────────────────
-const fmt = (n, d=1) => {
-  if (Math.abs(n) >= 1000) return (n/1000).toFixed(d) + ' T';
-  if (Math.abs(n) >= 1)    return n.toFixed(d) + ' B';
-  return (n*1000).toFixed(0) + ' M';
-};
-const fmtP = (n,d=1) => n.toFixed(d) + '%';
-const fmtM = (n) => '$' + Math.round(n).toLocaleString('es-CL');
-const fmtB = (n,d=2) => '$' + n.toFixed(d) + 'B';
+function getVal(id) { return parseFloat(document.getElementById(id).value); }
+function getBool(id) { return document.getElementById('g-'+id).checked; }
 
-// ── CÁLCULOS ──────────────────────────────────────────────────────────────────
-function calc() {
-  const r = S.tasa / 100;
-
-  // ---- CIVILES ----
-  // Pensión objetivo: max(piso, sueldo × reemplazo%)
-  const pensCivObj = Math.max(S.piso, S.sCiv * S.reempCiv / 100); // miles $/mes
-  // Capital necesario por jubilado civil
-  const cNecCiv = pensCivObj * 12 / r;   // $ millones
-  // Capital propio promedio
-  const cPropCiv = S.cProp;
-  // Top-up por jubilado civil (promedio)
-  const tuCiv = Math.max(0, cNecCiv - cPropCiv);
-  // Totales civiles (en billones CLP — dividimos por 1000 para pasar de M a B × n_miles)
-  const totalCPropCiv = cPropCiv * S.nCiv / 1000;   // B CLP
-  const totalTUCiv    = tuCiv    * S.nCiv / 1000;
-  const totalCNecCiv  = cNecCiv  * S.nCiv / 1000;
-  // Gasto pensiones civiles anual
-  const gastoCivAnual = pensCivObj * 12 * S.nCiv / 1e6; // B CLP
-  // Interés anual que genera el capital civil
-  const interesCivAnual = totalCNecCiv * r;
-
-  // ---- UNIFORMADOS ----
-  const pensMil = S.pMil;  // miles $/mes
-  const cNecMil = pensMil * 12 / r;  // $ millones por uniformado
-  // Suponemos capital propio uniformado = 6% × pensMil × 30 años carrera (simplificado)
-  const cPropMil = pensMil * 12 * 0.06 * 25 / 1000; // aprox acumulado
-  const tuMilUnit = Math.max(0, cNecMil - cPropMil);
-  const totalCPropMil = cPropMil * S.nMil / 1000;
-  const totalTUMil    = tuMilUnit * S.nMil / 1000;
-  const totalCNecMil  = cNecMil  * S.nMil / 1000;
-  const gastoMilAnual = pensMil * 12 * S.nMil / 1e6;
-  const interesMillAnual = totalCNecMil * r;
-  // Financiamiento propio (cotizaciones)
-  const financMil = gastoMilAnual * (S.cotMil / 100);
-  const subsidioMil = gastoMilAnual - financMil;
-
-  // ---- TOTAL SISTEMA ----
-  const totalCProp = totalCPropCiv + totalCPropMil;
-  const totalTU    = totalTUCiv + totalTUMil;
-  const totalCNec  = totalCNecCiv + totalCNecMil;
-  const gastoTotal = gastoCivAnual + gastoMilAnual;
-  const interesTotal = totalCNec * r;
-  const superavit = interesTotal - gastoTotal;
-  const cobertura = (interesTotal / gastoTotal) * 100;
-
-  return {
-    r,
-    // civiles
-    pensCivObj, cNecCiv, cPropCiv, tuCiv,
-    totalCPropCiv, totalTUCiv, totalCNecCiv,
-    gastoCivAnual, interesCivAnual,
-    // uniformados
-    pensMil, cNecMil, cPropMil, tuMilUnit,
-    totalCPropMil, totalTUMil, totalCNecMil,
-    gastoMilAnual, interesMillAnual,
-    financMil, subsidioMil,
-    // totales
-    totalCProp, totalTU, totalCNec,
-    gastoTotal, interesTotal, superavit, cobertura,
-    // ratios
-    topUpRatioCiv: (totalTUCiv / totalCNecCiv) * 100,
-    topUpRatioMil: (totalTUMil / totalCNecMil) * 100,
-  };
+function fmt(n, dec=1) {
+  if (n >= 1e12) return (n/1e12).toFixed(dec) + 'B';
+  if (n >= 1e9) return (n/1e9).toFixed(dec) + 'bill.';
+  if (n >= 1e6) return (n/1e6).toFixed(dec) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(dec) + 'K';
+  return n.toFixed(dec);
 }
+function fmtBill(n) { return '$' + (n/1e12).toFixed(1); }
+function fmtMill(n) { return '$' + (n/1e6).toFixed(0) + 'M'; }
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+function fmtN(n) { return Math.round(n/1000).toLocaleString() + 'K'; }
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
-function render() {
-  const d = calc();
-
-  // KPIs
-  const kpis = [
-    { label: 'Capital total necesario', value: fmtB(d.totalCNec), sub: 'Todo el sistema', cls: '' },
-    { label: 'Capital a prestar (Top-up)', value: fmtB(d.totalTU), sub: `${((d.totalTU/d.totalCNec)*100).toFixed(0)}% del total`, cls: 'red' },
-    { label: 'Gasto anual pensiones', value: fmtB(d.gastoTotal), sub: 'Civiles + uniformados', cls: '' },
-    { label: 'Interés anual generado', value: fmtB(d.interesTotal), sub: `Tasa ${fmtP(S.tasa)} real`, cls: 'green' },
-    { label: 'Superávit / Déficit anual', value: fmtB(d.superavit), sub: d.superavit >= 0 ? '✓ Sistema solvente' : '⚠ Revisar parámetros', cls: d.superavit >= 0 ? 'green' : 'red' },
-    { label: 'Cobertura del gasto', value: fmtP(d.cobertura), sub: 'Interés ÷ gasto', cls: d.cobertura >= 100 ? 'green' : 'red' },
-  ];
-  document.getElementById('kpi-row').innerHTML = kpis.map(k => `
-    <div class="kpi ${k.cls}">
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-value">${k.value}</div>
-      <div class="kpi-sub">${k.sub}</div>
-    </div>`).join('');
-
-  // Alert
-  let alertHTML = '';
-  if (d.cobertura >= 110) {
-    alertHTML = `<div class="alert alert-ok">✓ <strong>Sistema SOLVENTE con margen</strong> — Los intereses generados cubren el ${fmtP(d.cobertura)} del gasto en pensiones. El excedente de ${fmtB(d.superavit)}/año puede destinarse a reservas (B3) o ampliar cobertura.</div>`;
-  } else if (d.cobertura >= 100) {
-    alertHTML = `<div class="alert alert-warn">⚠ <strong>Sistema solvente pero ajustado</strong> — Cobertura del ${fmtP(d.cobertura)}. Se recomienda acumular reserva B3 antes de ampliar beneficios. Considere subir la tasa de retorno o reducir el piso.</div>`;
-  } else {
-    alertHTML = `<div class="alert alert-warn" style="border-color:var(--red);background:rgba(231,76,60,.1);color:#f1948a">⚠ <strong>DÉFICIT PROYECTADO</strong> — Con los parámetros actuales, los intereses solo cubren el ${fmtP(d.cobertura)} del gasto. Se requiere ajustar la tasa de retorno, el piso de pensión o el capital semilla.</div>`;
-  }
-  document.getElementById('alert-box').innerHTML = alertHTML;
-
-  // Tabla según vista
-  renderTabla(d);
-
-  // Barras
-  renderBarras(d);
-}
-
-function renderTabla(d) {
-  const tit = document.getElementById('tabla-titulo');
-  const sub = document.getElementById('tabla-sub');
-  const cont = document.getElementById('tabla-contenido');
-
-  if (S.view === 'resumen') {
-    tit.textContent = 'Resumen del Sistema';
-    sub.textContent = 'Valores en $ Billones CLP · Miles de personas';
-    cont.innerHTML = `
-    <table>
-      <thead><tr>
-        <th>Categoría</th>
-        <th>N° personas</th>
-        <th>Pensión obj./mes</th>
-        <th>C. propio total</th>
-        <th>Top-up total</th>
-        <th>C. necesario total</th>
-        <th>Gasto anual</th>
-        <th>Interés generado</th>
-      </tr></thead>
-      <tbody>
-        <tr>
-          <td><span class="tag tag-civ">CIV</span> Jubilados AFP</td>
-          <td>${S.nCiv.toLocaleString('es-CL')}k</td>
-          <td class="num-gold">${fmtM(d.pensCivObj*1000)}</td>
-          <td>${fmtB(d.totalCPropCiv)}</td>
-          <td class="num-gold">${fmtB(d.totalTUCiv)}</td>
-          <td>${fmtB(d.totalCNecCiv)}</td>
-          <td>${fmtB(d.gastoCivAnual)}</td>
-          <td class="num-green">${fmtB(d.interesCivAnual)}</td>
-        </tr>
-        <tr>
-          <td><span class="tag tag-mil">MIL</span> Uniformados</td>
-          <td>${S.nMil.toLocaleString('es-CL')}k</td>
-          <td class="num-gold">${fmtM(d.pensMil*1000)}</td>
-          <td>${fmtB(d.totalCPropMil)}</td>
-          <td class="num-gold">${fmtB(d.totalTUMil)}</td>
-          <td>${fmtB(d.totalCNecMil)}</td>
-          <td>${fmtB(d.gastoMilAnual)}</td>
-          <td class="num-green">${fmtB(d.interesMillAnual)}</td>
-        </tr>
-        <tr class="total">
-          <td>TOTAL SISTEMA</td>
-          <td>${(S.nCiv+S.nMil).toLocaleString('es-CL')}k</td>
-          <td>—</td>
-          <td>${fmtB(d.totalCProp)}</td>
-          <td>${fmtB(d.totalTU)}</td>
-          <td>${fmtB(d.totalCNec)}</td>
-          <td>${fmtB(d.gastoTotal)}</td>
-          <td class="${d.superavit>=0?'num-green':'num-red'}">${fmtB(d.interesTotal)}</td>
-        </tr>
-      </tbody>
-    </table>`;
-
-  } else if (S.view === 'detalle') {
-    tit.textContent = 'Detalle por Cohorte (Civil)';
-    sub.textContent = '$ millones por jubilado promedio · Regla 20×';
-    // Cohortes por años cotizados
-    const cohortes = [
-      {label:'0–5 años', cp: d.cPropCiv*0.08, pen: S.piso},
-      {label:'6–10 años', cp: d.cPropCiv*0.20, pen: S.piso},
-      {label:'11–15 años', cp: d.cPropCiv*0.38, pen: Math.max(S.piso, S.sCiv*0.35)},
-      {label:'16–20 años', cp: d.cPropCiv*0.55, pen: Math.max(S.piso, S.sCiv*0.50)},
-      {label:'21–25 años', cp: d.cPropCiv*0.70, pen: Math.max(S.piso, S.sCiv*0.62)},
-      {label:'26–30 años', cp: d.cPropCiv*0.85, pen: Math.max(S.piso, S.sCiv*0.72)},
-      {label:'31–35 años', cp: d.cPropCiv*0.95, pen: Math.max(S.piso, S.sCiv*0.78)},
-      {label:'36–45 años', cp: d.cPropCiv*1.15, pen: Math.max(S.piso, S.sCiv*S.reempCiv/100)},
-    ];
-    const rows = cohortes.map((c,i) => {
-      const cNec = c.pen * 12 / d.r;
-      const tu = Math.max(0, cNec - c.cp);
-      const pctTU = (tu/cNec*100).toFixed(0);
-      return `<tr>
-        <td>${c.label}</td>
-        <td class="num-gold">${fmtM(c.pen*1000)}</td>
-        <td>${c.cp.toFixed(1)}M</td>
-        <td>${cNec.toFixed(1)}M</td>
-        <td class="${tu>0?'num-gold':'num-green'}">${tu.toFixed(1)}M</td>
-        <td>${pctTU}%</td>
-        <td class="${tu>0?'num-gold':'num-green'}">${tu<=0?'✓ No necesita':'<span class="tag tag-top">PRÉSTAMO</span>'}</td>
-      </tr>`;
-    });
-    cont.innerHTML = `<table>
-      <thead><tr>
-        <th>Cohorte</th>
-        <th>Pensión obj.</th>
-        <th>C. propio</th>
-        <th>C. necesario</th>
-        <th>Top-up</th>
-        <th>% prestado</th>
-        <th>Estado</th>
-      </tr></thead>
-      <tbody>${rows.join('')}</tbody>
-    </table>`;
-
-  } else { // flujos
-    tit.textContent = 'Flujos Anuales del Sistema';
-    sub.textContent = 'Billones CLP/año · Distribución Regla 30/30/40';
-    const F1 = d.totalCProp * d.r;
-    const F2 = d.totalTU * d.r;
-    const F3 = Math.max(0, d.interesTotal - d.gastoTotal);
-    const b1 = F3 * 0.30, b2 = F3 * 0.30, b3 = F3 * 0.40;
-    cont.innerHTML = `<table>
-      <thead><tr><th>Flujo</th><th>Capital base</th><th>Tasa</th><th>Monto anual</th><th>Destino</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><strong>F1 — Base</strong></td>
-          <td>${fmtB(d.totalCProp)}</td>
-          <td>${fmtP(S.tasa)}</td>
-          <td class="num-green">${fmtB(F1)}</td>
-          <td>Pensión base (capital propio)</td>
-        </tr>
-        <tr>
-          <td><strong>F2 — Top-up</strong></td>
-          <td>${fmtB(d.totalTU)}</td>
-          <td>${fmtP(S.tasa)}</td>
-          <td class="num-green">${fmtB(F2)}</td>
-          <td>Diferencia hasta piso / 80%</td>
-        </tr>
-        <tr class="subtotal">
-          <td>TOTAL INTERÉS GENERADO</td>
-          <td>${fmtB(d.totalCNec)}</td>
-          <td>${fmtP(S.tasa)}</td>
-          <td>${fmtB(d.interesTotal)}</td>
-          <td>Gasto total: ${fmtB(d.gastoTotal)}</td>
-        </tr>
-        <tr>
-          <td><strong>F3 — Excedente</strong></td>
-          <td colspan="2">Superávit operacional</td>
-          <td class="${F3>=0?'num-green':'num-red'}">${fmtB(F3)}</td>
-          <td>Regla 30/30/40</td>
-        </tr>
-        <tr>
-          <td>  → B1 Financiamiento productivo</td>
-          <td colspan="2">30% del excedente</td>
-          <td class="num-green">${fmtB(b1)}</td>
-          <td>Crédito a economía real</td>
-        </tr>
-        <tr>
-          <td>  → B2 Solidaridad recuperable</td>
-          <td colspan="2">30% del excedente</td>
-          <td class="num-gold">${fmtB(b2)}</td>
-          <td>Corrección de lagunas</td>
-        </tr>
-        <tr>
-          <td>  → B3 Reserva anti-crisis</td>
-          <td colspan="2">40% del excedente</td>
-          <td style="color:#74b9e0">${fmtB(b3)}</td>
-          <td>Buffer; activo en modo Rojo</td>
-        </tr>
-        <tr class="total">
-          <td>UNIFORMADOS — Subsidio fiscal actual</td>
-          <td colspan="2">Cotización propia: ${fmtP(S.cotMil,1)}</td>
-          <td class="num-red">${fmtB(d.subsidioMil)}</td>
-          <td>Gasto que hoy financia el fisco</td>
-        </tr>
-      </tbody>
-    </table>`;
-  }
-}
-
-function renderBarras(d) {
-  const maxVal = Math.max(d.totalCNec, d.interesTotal * 10);
-
-  const barras = [
-    { label: 'Capital propio total', val: d.totalCProp, max: d.totalCNec, color: '#27ae60', fmt: fmtB(d.totalCProp) },
-    { label: 'Top-up a prestar', val: d.totalTU, max: d.totalCNec, color: '#d4a017', fmt: fmtB(d.totalTU) },
-    { label: 'Capital necesario total', val: d.totalCNec, max: d.totalCNec, color: '#2980b9', fmt: fmtB(d.totalCNec) },
-    { label: 'Gasto anual en pensiones', val: d.gastoTotal, max: d.interesTotal * 1.2, color: '#e74c3c', fmt: fmtB(d.gastoTotal) },
-    { label: 'Interés anual generado', val: d.interesTotal, max: d.interesTotal * 1.2, color: '#27ae60', fmt: fmtB(d.interesTotal) },
-    { label: 'Subsidio fiscal uniformados', val: d.subsidioMil, max: d.gastoMilAnual, color: '#e74c3c', fmt: fmtB(d.subsidioMil) },
-  ];
-
-  document.getElementById('barra-seccion').innerHTML = `
-    <div class="bar-title">Proporción del capital por componente</div>
-    ${barras.map(b => `
-      <div class="bar-row">
-        <div class="bar-label">${b.label}</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${Math.min(100,(b.val/b.max)*100).toFixed(1)}%;background:${b.color}"></div>
-        </div>
-        <div class="bar-val" style="color:${b.color}">${b.fmt}</div>
-      </div>`).join('')}
-    <div style="margin-top:.8rem;font-size:.72rem;color:var(--muted);font-family:'IBM Plex Mono',monospace">
-      Cobertura interés/gasto: <strong style="color:${d.cobertura>=100?'var(--green)':'var(--red)'}">${fmtP(d.cobertura)}</strong>
-      &nbsp;|&nbsp; Top-up civil: ${fmtP(d.topUpRatioCiv)} del capital civil
-      &nbsp;|&nbsp; Top-up mil: ${fmtP(d.topUpRatioMil)} del capital uniformados
-    </div>`;
-}
-
-// ── CONTROLES ──────────────────────────────────────────────────────────────────
-function bind(id, stateKey, displayId, transform, fmtFn) {
+// ======== LABEL SYNC ========
+function bindSlider(id, labelId, formatter) {
   const el = document.getElementById(id);
-  const dsp = document.getElementById(displayId);
-  el.addEventListener('input', () => {
-    S[stateKey] = transform(el.value);
-    dsp.textContent = fmtFn(S[stateKey]);
-    render();
+  const lbl = document.getElementById(labelId);
+  el.addEventListener('input', () => { lbl.textContent = formatter(parseFloat(el.value)); recalc(); });
+}
+
+function initSliders() {
+  bindSlider('r', 'lbl-r', v => v.toFixed(1)+'%');
+  bindSlider('ipc', 'lbl-ipc', v => v.toFixed(1)+'%');
+  bindSlider('piso', 'lbl-piso', v => '$'+v+'K');
+  bindSlider('anos', 'lbl-anos', v => v+'');
+  bindSlider('uni-n', 'lbl-uni-n', v => v+'K');
+  bindSlider('uni-s', 'lbl-uni-s', v => '$'+v+'K');
+  bindSlider('prof-n', 'lbl-prof-n', v => v+'K');
+  bindSlider('prof-tu', 'lbl-prof-tu', v => '$'+v+'K');
+  bindSlider('orig-n', 'lbl-orig-n', v => v+'K');
+  bindSlider('orig-tu', 'lbl-orig-tu', v => '$'+v+'K');
+  bindSlider('orig-rec', 'lbl-orig-rec', v => v+'%');
+  bindSlider('civ-n', 'lbl-civ-n', v => v+'K');
+  bindSlider('civ-k', 'lbl-civ-k', v => '$'+v+'M');
+  bindSlider('civ-s', 'lbl-civ-s', v => '$'+v+'K');
+  bindSlider('civ-tr', 'lbl-civ-tr', v => v+'%');
+  bindSlider('civ-tmax', 'lbl-civ-tmax', v => '$'+v+'K');
+  bindSlider('civ-rec', 'lbl-civ-rec', v => v+'%');
+  bindSlider('pesc-n', 'lbl-pesc-n', v => v+'K');
+  bindSlider('pesc-tu', 'lbl-pesc-tu', v => '$'+v+'K');
+  bindSlider('pirq-n', 'lbl-pirq-n', v => v+'K');
+  bindSlider('pirq-tu', 'lbl-pirq-tu', v => '$'+v+'K');
+  bindSlider('temp-n', 'lbl-temp-n', v => v+'K');
+  bindSlider('temp-tu', 'lbl-temp-tu', v => '$'+v+'K');
+  bindSlider('feri-n', 'lbl-feri-n', v => v+'K');
+  bindSlider('feri-tu', 'lbl-feri-tu', v => '$'+v+'K');
+  bindSlider('cuida-n', 'lbl-cuida-n', v => v+'K');
+  bindSlider('cuida-lag', 'lbl-cuida-lag', v => v+'');
+  bindSlider('cuida-tu', 'lbl-cuida-tu', v => '$'+v+'K');
+  bindSlider('trans-n', 'lbl-trans-n', v => v+'K');
+  bindSlider('trans-tu', 'lbl-trans-tu', v => '$'+v+'K');
+  bindSlider('casa-n', 'lbl-casa-n', v => v+'K');
+  bindSlider('casa-tu', 'lbl-casa-tu', v => '$'+v+'K');
+  bindSlider('indep-n', 'lbl-indep-n', v => v+'K');
+  bindSlider('indep-tu', 'lbl-indep-tu', v => '$'+v+'K');
+  bindSlider('vida-m', 'lbl-vida-m', v => v+'');
+  bindSlider('vida-h', 'lbl-vida-h', v => v+'');
+
+  // checkboxes
+  document.querySelectorAll('input[type=checkbox]').forEach(el => {
+    el.addEventListener('change', recalc);
   });
 }
 
-bind('sl-tasa',    'tasa',     'val-tasa',     v=>+v, v=>v.toFixed(1)+'%');
-bind('sl-piso',    'piso',     'val-piso',     v=>+v, v=>v.toLocaleString('es-CL'));
-bind('sl-nciv',    'nCiv',     'val-nciv',     v=>+v, v=>v.toLocaleString('es-CL'));
-bind('sl-cprop',   'cProp',    'val-cprop',    v=>+v, v=>v);
-bind('sl-sciv',    'sCiv',     'val-sciv',     v=>+v, v=>v.toLocaleString('es-CL'));
-bind('sl-reempciv','reempCiv', 'val-reempciv', v=>+v, v=>v+'%');
-bind('sl-nmil',    'nMil',     'val-nmil',     v=>+v, v=>v.toLocaleString('es-CL'));
-bind('sl-pmil',    'pMil',     'val-pmil',     v=>+v, v=>v.toLocaleString('es-CL'));
-bind('sl-cotmil',  'cotMil',   'val-cotmil',   v=>+v, v=>v.toFixed(2)+'%');
+// ======== CALCULATION ========
+function recalc() {
+  const r = getVal('r') / 100;
+  const ipc = getVal('ipc') / 100;
+  const piso = getVal('piso') * 1000;
+  const anos = getVal('anos');
+  const mult = Math.round(12 / r);
 
-function setView(v) {
-  S.view = v;
-  document.querySelectorAll('.toggle-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent.toLowerCase().includes(v==='resumen'?'resum':v==='detalle'?'deta':'flujo'));
-  });
+  // Uniformados
+  const uni_n = getVal('uni-n') * 1000;
+  const uni_s = getVal('uni-s') * 1000;
+  const uni_kpp = uni_s * mult;
+  const uni_total = getBool('uni') ? uni_n * uni_kpp : 0;
+  const uni_pension_anual = getBool('uni') ? uni_n * uni_s * 12 : 0;
+
+  // Profesores
+  const prof_n = getVal('prof-n') * 1000;
+  const prof_tu = getVal('prof-tu') * 1000;
+  const prof_kpp = prof_tu * mult;
+  const prof_total = getBool('prof') ? prof_n * prof_kpp : 0;
+  const prof_pension_anual = getBool('prof') ? prof_n * prof_tu * 12 : 0;
+
+  // Pueblos originarios
+  const orig_n = getVal('orig-n') * 1000;
+  const orig_tu = getVal('orig-tu') * 1000;
+  const orig_kpp = orig_tu * mult;
+  const orig_rec = getVal('orig-rec') / 100;
+  const orig_total = getBool('orig') ? orig_n * orig_kpp : 0;
+  const orig_pension_anual = getBool('orig') ? orig_n * orig_tu * 12 : 0;
+  const orig_costo_neto = getBool('orig') ? orig_total * (1 - orig_rec) : 0;
+
+  // Civiles AFP
+  const civ_n = getVal('civ-n') * 1000;
+  const civ_k = getVal('civ-k') * 1e6;
+  const civ_s = getVal('civ-s') * 1000;
+  const civ_tr = getVal('civ-tr') / 100;
+  const civ_tmax = getVal('civ-tmax') * 1000;
+  const civ_rec = getVal('civ-rec') / 100;
+  const civ_pension_obj = civ_s * civ_tr;
+  const civ_k_nec = civ_pension_obj * mult;
+  const civ_tu_teo = Math.max(0, civ_k_nec - civ_k);
+  const civ_tu_app = Math.min(civ_tu_teo, civ_tmax * mult);
+  const civ_k_total_pp = civ_k + civ_tu_app;
+  const civ_total_topup = getBool('civil') ? civ_n * civ_tu_app : 0;
+  const civ_total_propio = getBool('civil') ? civ_n * civ_k : 0;
+  const civ_total = civ_total_topup + civ_total_propio;
+  const civ_pension_anual = getBool('civil') ? civ_n * (civ_k_total_pp * r) : 0;
+  const civ_costo_neto = getBool('civil') ? civ_total_topup * (1 - civ_rec) : 0;
+
+  // B2 retorno anual civil
+  const b2_ret = getBool('civil') ? (civ_n / anos) * civ_tu_app : 0;
+
+  // Nuevos beneficiarios
+  function newGroup(active_id, n_id, tu_id) {
+    if (!getBool(active_id)) return { k: 0, pension: 0, n: 0, tu: 0 };
+    const n = getVal(n_id) * 1000;
+    const tu = getVal(tu_id) * 1000;
+    return { k: n * tu * mult, pension: n * tu * 12, n, tu };
+  }
+  const pesc = newGroup('pesc', 'pesc-n', 'pesc-tu');
+  const pirq = newGroup('pirq', 'pirq-n', 'pirq-tu');
+  const temp = newGroup('temp', 'temp-n', 'temp-tu');
+  const feri = newGroup('feri', 'feri-n', 'feri-tu');
+
+  // Cuidadoras (laguna)
+  const cuida_n = getBool('cuida') ? getVal('cuida-n') * 1000 : 0;
+  const cuida_lag = getVal('cuida-lag');
+  const cuida_tu = getVal('cuida-tu') * 1000;
+  const cuida_k = cuida_n * cuida_tu * mult;
+  const cuida_pension = cuida_n * cuida_tu * 12;
+
+  const trans = newGroup('trans', 'trans-n', 'trans-tu');
+  const casa = newGroup('casa', 'casa-n', 'casa-tu');
+  const indep = newGroup('indep', 'indep-n', 'indep-tu');
+
+  const k_nuevos = pesc.k + pirq.k + temp.k + feri.k + cuida_k + trans.k + casa.k + indep.k;
+  const pension_nuevos = pesc.pension + pirq.pension + temp.pension + feri.pension + cuida_pension + trans.pension + casa.pension + indep.pension;
+  const n_nuevos = (getBool('pesc') ? getVal('pesc-n')*1000 : 0)
+    + (getBool('pirq') ? getVal('pirq-n')*1000 : 0)
+    + (getBool('temp') ? getVal('temp-n')*1000 : 0)
+    + (getBool('feri') ? getVal('feri-n')*1000 : 0)
+    + cuida_n + trans.n + casa.n + indep.n;
+
+  // TOTALES
+  const k_historicos = uni_total + prof_total + orig_total + civ_total;
+  const k_total = k_historicos + k_nuevos;
+  const pension_total = uni_pension_anual + prof_pension_anual + orig_pension_anual + civ_pension_anual + pension_nuevos;
+  const interes_anual = k_total * r;
+  const cobertura = pension_total > 0 ? interes_anual / pension_total : 0;
+
+  const n_historicos = (getBool('uni') ? uni_n : 0) + (getBool('prof') ? prof_n : 0) + (getBool('orig') ? orig_n : 0) + (getBool('civil') ? civ_n : 0);
+  const n_total = n_historicos + n_nuevos;
+
+  S = { r, ipc, piso, anos, mult, k_total, k_historicos, k_nuevos, pension_total, interes_anual, cobertura,
+    n_total, n_historicos, n_nuevos, b2_ret,
+    uni: { n: uni_n, kpp: uni_kpp, total: uni_total, pension: uni_pension_anual },
+    prof: { n: prof_n, kpp: prof_kpp, total: prof_total, pension: prof_pension_anual },
+    orig: { n: orig_n, kpp: orig_kpp, total: orig_total, pension: orig_pension_anual, rec: orig_rec, costo: orig_costo_neto },
+    civ: { n: civ_n, kpp: civ_k_total_pp, tu_app: civ_tu_app, total: civ_total, total_topup: civ_total_topup, total_propio: civ_total_propio, pension: civ_pension_anual, rec: civ_rec, costo: civ_costo_neto, pension_obj: civ_pension_obj },
+    pesc, pirq, temp, feri,
+    cuida: { n: cuida_n, k: cuida_k, pension: cuida_pension, lag: cuida_lag, tu: cuida_tu },
+    trans, casa, indep,
+    vida_m: getVal('vida-m'), vida_h: getVal('vida-h'),
+    cuida_lag: cuida_lag
+  };
+
   render();
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
-render();
+// ======== RENDER ========
+function render() {
+  const {r, ipc, piso, mult, k_total, k_historicos, k_nuevos, pension_total, interes_anual, cobertura,
+    n_total, n_historicos, n_nuevos, b2_ret, uni, prof, orig, civ,
+    pesc, pirq, temp, feri, cuida, trans, casa, indep,
+    vida_m, vida_h, anos} = S;
+
+  // SEMAPHORE
+  let semCls = 'green', semMsg = 'VERDE — Sistema operable normalmente';
+  if (cobertura < 0.8) { semCls = 'red'; semMsg = 'ROJO — Modo defensa RAAB activo'; }
+  else if (cobertura < 1.0) { semCls = 'yellow'; semMsg = 'AMARILLO — Reajuste real congelado'; }
+  document.getElementById('sem-green').className = 'sem-dot ' + (semCls === 'green' ? 'active-green' : 'inactive');
+  document.getElementById('sem-yellow').className = 'sem-dot ' + (semCls === 'yellow' ? 'active-yellow' : 'inactive');
+  document.getElementById('sem-red').className = 'sem-dot ' + (semCls === 'red' ? 'active-red' : 'inactive');
+  document.getElementById('sem-text').textContent = semMsg;
+  document.getElementById('sem-text').className = 'sem-status ' + semCls;
+
+  // RESUMEN KPIs
+  document.getElementById('mult-show').textContent = mult;
+  document.getElementById('r-show').textContent = (r*100).toFixed(1)+'%';
+  document.getElementById('kpi-capital').textContent = fmtBill(k_total);
+  document.getElementById('kpi-capital-note').textContent = 'Hist. '+fmtBill(k_historicos)+' + Nuevos '+fmtBill(k_nuevos);
+  document.getElementById('kpi-gasto').textContent = fmtBill(pension_total);
+  document.getElementById('kpi-gasto-note').textContent = n_total.toLocaleString()+' beneficiarios activos';
+  document.getElementById('kpi-interes').textContent = fmtBill(interes_anual);
+  document.getElementById('kpi-personas').textContent = Math.round(n_total/1000)+'K';
+  document.getElementById('kpi-personas-note').textContent = Math.round(n_historicos/1000)+'K hist. + '+Math.round(n_nuevos/1000)+'K nuevos';
+  document.getElementById('kpi-nuevos').textContent = fmtBill(k_nuevos);
+  document.getElementById('kpi-b2').textContent = fmtBill(b2_ret);
+
+  // COBERTURA
+  const pct = Math.min(cobertura * 100, 150);
+  const covColor = cobertura >= 1 ? 'var(--green-light)' : cobertura >= 0.8 ? 'var(--warn)' : 'var(--danger)';
+  document.getElementById('cov-num').textContent = (cobertura * 100).toFixed(1) + '%';
+  document.getElementById('cov-num').style.color = covColor;
+  document.getElementById('cov-bar').style.width = Math.min(pct, 100) + '%';
+  document.getElementById('cov-bar').style.background = covColor;
+  const aBox = document.getElementById('cov-alert');
+  const aMsg = document.getElementById('cov-msg');
+  if (cobertura >= 1) {
+    aBox.className = 'alert good'; aMsg.textContent = 'El sistema genera suficiente interés para cubrir el 100% del gasto en pensiones. Superávit disponible para reserva B3.';
+  } else if (cobertura >= 0.8) {
+    aBox.className = 'alert warn'; aMsg.textContent = 'Cobertura insuficiente. La RAAB congela el componente real del reajuste. Revise parámetros o reduzca beneficiarios activos.';
+  } else {
+    aBox.className = 'alert bad'; aMsg.textContent = 'RAAB en rojo. El sistema activa modo defensa. Las pensiones se protegen en términos reales pero no crecen. Requiere revisión urgente de parámetros.';
+  }
+
+  // ALERT BOX (advertencias adicionales)
+  let alerts = '';
+  if (k_nuevos > k_historicos * 0.5) alerts += '<div class="alert warn"><span class="alert-icon">⚠</span><span>Los nuevos beneficiarios representan más del 50% del capital histórico. Verifique la sostenibilidad del fondo B2 para este escenario.</span></div>';
+  if (cobertura >= 1.5) alerts += '<div class="alert good"><span class="alert-icon">✓</span><span>Superávit muy alto ('+fmtPct(cobertura*100)+'). El excedente solidario (techo Sueldo de General) puede redistribuirse a jubilados con capital insuficiente.</span></div>';
+  document.getElementById('alert-box').innerHTML = alerts;
+
+  // BAR CHART
+  const barGroups = [
+    { label: 'Uniformados', val: uni.total, color: 'var(--gold)' },
+    { label: 'Profesores', val: prof.total, color: 'var(--blue)' },
+    { label: 'Pueblos originarios', val: orig.total, color: 'var(--green-light)' },
+    { label: 'Civiles AFP (top-up)', val: civ.total_topup, color: '#9b7eca' },
+    { label: 'Civiles AFP (propio)', val: civ.total_propio, color: '#6a5a9a' },
+    { label: 'Pescadores', val: pesc.k, color: 'var(--warn)' },
+    { label: 'Pirquineros', val: pirq.k, color: 'var(--warn)' },
+    { label: 'Temporeros', val: temp.k, color: 'var(--warn)' },
+    { label: 'Feriantes', val: feri.k, color: 'var(--warn)' },
+    { label: 'Cuidadoras', val: cuida.k, color: 'var(--danger)' },
+    { label: 'Transportistas', val: trans.k, color: 'var(--warn)' },
+    { label: 'Casa particular', val: casa.k, color: 'var(--danger)' },
+    { label: 'Independientes', val: indep.k, color: '#c88ae0' },
+  ].filter(g => g.val > 0);
+  const maxBar = Math.max(...barGroups.map(g => g.val));
+  document.getElementById('bar-container').innerHTML = barGroups.map(g => `
+    <div class="bar-row">
+      <div class="bar-label">${g.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(g.val/maxBar*100).toFixed(1)}%;background:${g.color}"></div></div>
+      <div class="bar-val">${fmtBill(g.val)} bill.</div>
+    </div>`).join('');
+
+  // TABLA GRUPOS
+  const gRows = [
+    getBool('uni') && { name: 'Uniformados CAPREDENA/DIPRECA', tag: 'gold', tagLabel: 'Promesa', n: uni.n, pension: getVal('uni-s')*1000, kpp: uni.kpp, total: uni.total, deuda: 'Sin patrimonio', rec: '—' },
+    getBool('prof') && { name: 'Profesores sistema público', tag: 'blue', tagLabel: 'Subvaloración', n: prof.n, pension: getVal('prof-tu')*1000, kpp: prof_kpp(), total: prof.total, deuda: 'Sueldo bajo → cotiz. baja', rec: '85%' },
+    getBool('orig') && { name: 'Pueblos originarios', tag: 'green', tagLabel: 'Exclusión', n: orig.n, pension: getVal('orig-tu')*1000, kpp: orig_kpp(), total: orig.total, deuda: 'Informalidad estructural', rec: fmtPct(orig.rec*100) },
+    getBool('civil') && { name: 'Jubilados civiles AFP', tag: 'warn', tagLabel: 'Mayoría', n: civ.n, pension: civ.pension_obj, kpp: civ.kpp, total: civ.total, deuda: 'Pensiones insuficientes', rec: fmtPct(civ.rec*100) },
+  ].filter(Boolean);
+  function prof_kpp() { return getVal('prof-tu')*1000 * S.mult; }
+  function orig_kpp() { return getVal('orig-tu')*1000 * S.mult; }
+
+  document.getElementById('tabla-grupos').innerHTML = gRows.map(g => `
+    <tr>
+      <td><span class="group-name">${g.name}</span><span class="group-tag tag-${g.tag}">${g.tagLabel}</span></td>
+      <td>${Math.round(g.n/1000).toLocaleString()}K</td>
+      <td class="val-${g.tag}">$${Math.round(g.pension/1000)}K/mes</td>
+      <td class="val-${g.tag}">${fmtMill(g.kpp)}</td>
+      <td class="val-${g.tag}">${fmtBill(g.total)} bill.</td>
+      <td style="font-size:10px;color:var(--text3)">${g.deuda}</td>
+      <td>${g.rec}</td>
+    </tr>`).join('') +
+  `<tr class="total">
+    <td>TOTAL GRUPOS HISTÓRICOS</td>
+    <td>${Math.round(n_historicos/1000)}K</td>
+    <td>—</td><td>—</td>
+    <td class="val-gold">${fmtBill(k_historicos)} bill.</td>
+    <td>—</td><td>—</td>
+  </tr>`;
+
+  document.getElementById('mult-grupos').textContent = mult;
+
+  // TABLA NUEVOS
+  const nuevosRows = [
+    getBool('pesc') && { name: 'Pescadores artesanales', n: pesc.n, tu: getVal('pesc-tu')*1000, kpp: pesc.n > 0 ? pesc.k/pesc.n : 0, total: pesc.k, perfil: 'Alta inf., estacional' },
+    getBool('pirq') && { name: 'Pirquineros / pequeña minería', n: pirq.n, tu: getVal('pirq-tu')*1000, kpp: pirq.n > 0 ? pirq.k/pirq.n : 0, total: pirq.k, perfil: 'Ing. irregular, desgaste' },
+    getBool('temp') && { name: 'Temporeros/as agrícolas', n: temp.n, tu: getVal('temp-tu')*1000, kpp: temp.n > 0 ? temp.k/temp.n : 0, total: temp.k, perfil: 'Cotiz. discontinua' },
+    getBool('feri') && { name: 'Feriantes / comercio informal', n: feri.n, tu: getVal('feri-tu')*1000, kpp: feri.n > 0 ? feri.k/feri.n : 0, total: feri.k, perfil: 'Sin contrato formal' },
+    getBool('cuida') && { name: 'Cuidadoras no remuneradas', n: cuida.n, tu: cuida.tu, kpp: cuida.n > 0 ? cuida.k/cuida.n : 0, total: cuida.k, perfil: cuida.lag+' años laguna prom.' },
+    getBool('trans') && { name: 'Transportistas / choferes', n: trans.n, tu: getVal('trans-tu')*1000, kpp: trans.n > 0 ? trans.k/trans.n : 0, total: trans.k, perfil: 'Desgaste físico alto' },
+    getBool('casa') && { name: 'Trabajadoras casa particular', n: casa.n, tu: getVal('casa-tu')*1000, kpp: casa.n > 0 ? casa.k/casa.n : 0, total: casa.k, perfil: 'Subcotizantes históricas' },
+    getBool('indep') && { name: 'Independientes / cuenta propia', n: indep.n, tu: getVal('indep-tu')*1000, kpp: indep.n > 0 ? indep.k/indep.n : 0, total: indep.k, perfil: 'Densidad cotiz. baja' },
+  ].filter(Boolean);
+
+  document.getElementById('tabla-nuevos').innerHTML = nuevosRows.map(g => `
+    <tr>
+      <td><span class="group-name">${g.name}</span><span class="group-tag tag-warn">Nuevo</span></td>
+      <td>${Math.round(g.n/1000)}K</td>
+      <td class="val-warn">$${Math.round(g.tu/1000)}K/mes</td>
+      <td class="val-warn">${fmtMill(g.kpp)}</td>
+      <td class="val-warn">${fmtBill(g.total)} bill.</td>
+      <td style="font-size:10px;color:var(--text3)">${g.perfil}</td>
+    </tr>`).join('') +
+  `<tr class="total">
+    <td>TOTAL NUEVOS BENEFICIARIOS</td>
+    <td>${Math.round(n_nuevos/1000)}K</td>
+    <td>—</td><td>—</td>
+    <td class="val-warn">${fmtBill(k_nuevos)} bill.</td>
+    <td>—</td>
+  </tr>`;
+
+  // TIMELINE SOSTENIBILIDAD
+  document.getElementById('b2-jubilados').textContent = Math.round(civ.n/1000)+'K';
+  document.getElementById('b2-anos').textContent = anos;
+  const years = [0,1,3,5,8,10,15,20,25,35];
+  let rows = '';
+  for (const y of years) {
+    const fondo = k_total * Math.pow(1 + ipc, y);
+    const gasto = pension_total * Math.pow(1 + ipc, y);
+    const interes = fondo * r;
+    const superavit = interes - gasto;
+    const absorbibles = superavit > 0 ? Math.round(superavit / (getVal('civ-tmax')*1000*mult + civ.total_propio/civ.n)) : 0;
+    const estado = interes/gasto >= 1 ? '🟢' : interes/gasto >= 0.8 ? '🟡' : '🔴';
+    const isMilestone = [0,5,10,20,35].includes(y);
+    rows += `<tr class="${isMilestone ? 'milestone' : ''}">
+      <td>Año ${y}</td>
+      <td class="val-gold">${fmtBill(fondo)}</td>
+      <td class="val-blue">${fmtBill(gasto)}</td>
+      <td class="val-green">${fmtBill(interes)}</td>
+      <td class="${superavit >= 0 ? 'val-green' : 'val-danger'}">${superavit >= 0 ? '+' : ''}${fmtBill(superavit)}</td>
+      <td>${absorbibles > 0 ? '~'+Math.round(absorbibles/1000)+'K' : '—'}</td>
+      <td>${estado}</td>
+    </tr>`;
+  }
+  document.getElementById('tabla-timeline').innerHTML = rows;
+
+  // STRESS TESTS
+  const stressR = [2,3,4,5,6,7,8].map(rv => {
+    const rm = rv/100; const m = Math.round(12/rm);
+    const cov = (k_total * rm) / pension_total;
+    const clr = cov >= 1 ? 'var(--green-light)' : cov >= 0.8 ? 'var(--warn)' : 'var(--danger)';
+    return `<div class="stress-row"><span class="s-label">r = ${rv}%  (×${m})</span><span class="s-val" style="color:${clr}">${(cov*100).toFixed(0)}% cob.</span></div>`;
+  }).join('');
+  document.getElementById('stress-retorno').innerHTML = stressR;
+
+  const stressIPC = [2,3,3.5,4,5,6,7].map(iv => {
+    const anioReal = (1+r)/(1+iv/100)-1;
+    const clr = anioReal > 0.03 ? 'var(--green-light)' : anioReal > 0 ? 'var(--warn)' : 'var(--danger)';
+    return `<div class="stress-row"><span class="s-label">IPC ${iv}%</span><span class="s-val" style="color:${clr}">r_real ${(anioReal*100).toFixed(1)}%</span></div>`;
+  }).join('');
+  document.getElementById('stress-ipc').innerHTML = stressIPC;
+
+  const stressLon = [15,18,20,22,25,28,30,35].map(av => {
+    const m2 = Math.round(12/r);
+    const cov2 = k_total * r / (pension_total);
+    const extra = av > 20 ? ((av-20)/20*100).toFixed(0) : '0';
+    const clr = av <= 20 ? 'var(--green-light)' : av <= 25 ? 'var(--warn)' : 'var(--danger)';
+    return `<div class="stress-row"><span class="s-label">${av} años retiro</span><span class="s-val" style="color:${clr}">${av > 20 ? '+'+extra+'% riesgo' : 'Normal'}</span></div>`;
+  }).join('');
+  document.getElementById('stress-longevidad').innerHTML = stressLon;
+
+  const stressB2 = [
+    { label: 'Urbanos formales (85%)', k: 9600000, n: 800000, rec: 0.85 },
+    { label: 'Informalidad parcial (60%)', k: 18000000, n: 1200000, rec: 0.60 },
+    { label: 'Pueblos orig. / alta inf. (35%)', k: 25900000, n: 350000, rec: 0.35 },
+  ].map(g => {
+    const costo = g.k * g.n * (1 - g.rec) / 1e12;
+    const clr = g.rec >= 0.8 ? 'var(--green-light)' : g.rec >= 0.5 ? 'var(--warn)' : 'var(--danger)';
+    return `<div class="stress-row"><span class="s-label" style="font-size:10px">${g.label}</span><span class="s-val" style="color:${clr}">$${costo.toFixed(1)}B neto</span></div>`;
+  }).join('');
+  document.getElementById('stress-b2').innerHTML = stressB2;
+
+  const stressGen = [
+    { label: 'Mujer ('+vida_m+' años)', v: piso * 12 / r * vida_m/20, clr: 'var(--danger)' },
+    { label: 'Hombre ('+vida_h+' años)', v: piso * 12 / r * vida_h/20, clr: 'var(--blue)' },
+    { label: 'Brecha', v: piso * 12 / r * (vida_m - vida_h)/20, clr: 'var(--warn)' },
+  ].map(g => `<div class="stress-row"><span class="s-label">${g.label}</span><span class="s-val" style="color:${g.clr}">${fmtMill(g.v)}</span></div>`).join('');
+  document.getElementById('stress-genero').innerHTML = stressGen;
+
+  const stressMult = [3,4,5,6,7,8].map(rv => {
+    const m2 = Math.round(12/(rv/100));
+    return `<div class="stress-row"><span class="s-label">r = ${rv}%</span><span class="s-val" style="color:var(--text2)">×${m2}</span></div>`;
+  }).join('');
+  document.getElementById('stress-mult').innerHTML = stressMult;
+
+  // GÉNERO
+  const k_m = piso * 12 * vida_m / r / 1e6;
+  const k_h = piso * 12 * vida_h / r / 1e6;
+  const brecha = (k_m - k_h);
+  const laguna_impacto = cuida.lag * 12 * piso * 0.1 / 1e6;
+  document.getElementById('gen-k-m').textContent = '$' + k_m.toFixed(0) + 'M';
+  document.getElementById('gen-k-h').textContent = '$' + k_h.toFixed(0) + 'M';
+  document.getElementById('gen-años-m').textContent = vida_m + ' años de retiro esperados';
+  document.getElementById('gen-años-h').textContent = vida_h + ' años de retiro esperados';
+  document.getElementById('gen-brecha').textContent = '$' + brecha.toFixed(0) + 'M';
+  document.getElementById('gen-laguna').textContent = cuida.lag + ' años';
+  document.getElementById('gen-impacto').textContent = '$' + laguna_impacto.toFixed(1) + 'M';
+  document.getElementById('genero-msg').textContent =
+    `Con los parámetros actuales, una mujer necesita $${brecha.toFixed(0)}M más de capital que un hombre para sostener la misma pensión (PBS $${Math.round(piso/1000)}K/mes), por vivir ${vida_m - vida_h} años más en promedio. El fondo B2 (segundo 30%) debe corregir esta brecha de manera estructural, no puntual.`;
+
+  // FÓRMULAS
+  document.getElementById('f-mult').textContent = mult;
+}
+
+// ======== TABS ========
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  const tabs = ['resumen','grupos','nuevos','sostenibilidad','stress','genero','formula'];
+  const idx = tabs.indexOf(id);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+// ======== EXPORT CSV ========
+function exportCSV() {
+  const { r, k_total, pension_total, interes_anual, cobertura, n_total, mult,
+    uni, prof, orig, civ, pesc, pirq, temp, feri, cuida, trans, casa, indep, k_nuevos } = S;
+
+  let csv = 'MODELO RENTISTA v5.0 — Exportación de resultados\n\n';
+  csv += 'Parámetro,Valor\n';
+  csv += `Tasa retorno real,${(r*100).toFixed(1)}%\n`;
+  csv += `Multiplicador,${mult}\n`;
+  csv += `Capital Total AFJ (bill. CLP),${(k_total/1e12).toFixed(2)}\n`;
+  csv += `Gasto Anual Pensiones (bill. CLP),${(pension_total/1e12).toFixed(2)}\n`;
+  csv += `Interés Real Anual (bill. CLP),${(interes_anual/1e12).toFixed(2)}\n`;
+  csv += `Cobertura,${(cobertura*100).toFixed(1)}%\n`;
+  csv += `Total beneficiarios,${Math.round(n_total/1000)}K\n\n`;
+  csv += 'Grupo,Personas,Fondo (bill.)\n';
+  csv += `Uniformados,${Math.round(uni.n/1000)}K,${(uni.total/1e12).toFixed(2)}\n`;
+  csv += `Profesores,${Math.round(prof.n/1000)}K,${(prof.total/1e12).toFixed(2)}\n`;
+  csv += `Pueblos originarios,${Math.round(orig.n/1000)}K,${(orig.total/1e12).toFixed(2)}\n`;
+  csv += `Civiles AFP,${Math.round(civ.n/1000)}K,${(civ.total/1e12).toFixed(2)}\n`;
+  csv += `Total nuevos beneficiarios,${Math.round(S.n_nuevos/1000)}K,${(k_nuevos/1e12).toFixed(2)}\n`;
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'modelorentista_v5.csv';
+  a.click();
+}
+
+// ======== INIT ========
+initSliders();
+recalc();
 </script>
 </body>
 </html>
