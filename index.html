@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MODELO RENTISTA — Calculadora v5.0</title>
+<title>MODELO RENTISTA — Calculadora v5.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -662,7 +662,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
   <div class="header-top">
     <div>
       <div class="header-title">MODELO RENTISTA</div>
-      <div class="header-sub">Calculadora de Capital, Pensiones y Sostenibilidad · v5.0 · 2026</div>
+      <div class="header-sub">Calculadora de Capital, Pensiones y Sostenibilidad · v5.1 · 2026</div>
       <div style="font-size:11px;color:var(--text3);margin-top:4px;">Danilo Daneri Solano · Asistencia: Claude (Anthropic)</div>
     </div>
     <div class="header-badge">HERRAMIENTA INTERACTIVA</div>
@@ -876,6 +876,21 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
     <input type="range" id="feri-tu" min="150" max="500" step="10" value="300">
   </div>
 
+  <div class="group-toggle"><input type="checkbox" id="g-recol" checked><label class="warn" for="g-recol">Recolectoras de orilla y algueras</label></div>
+  <div class="group-sub">Trabajo costero, registro SERNAPESCA, baja densidad cotización</div>
+  <div class="param-block">
+    <div class="param-row">
+      <div class="param-label">N° personas (miles)</div>
+      <div class="param-val" id="lbl-recol-n">17K</div>
+    </div>
+    <input type="range" id="recol-n" min="5" max="50" step="1" value="17">
+    <div class="param-row">
+      <div class="param-label">Top-up mensual ($ miles)</div>
+      <div class="param-val" id="lbl-recol-tu">$350K</div>
+    </div>
+    <input type="range" id="recol-tu" min="150" max="600" step="10" value="350">
+  </div>
+
   <div class="group-toggle"><input type="checkbox" id="g-cuida" checked><label class="danger" for="g-cuida">Cuidadoras no remuneradas</label></div>
   <div class="group-sub">Brecha de género — lagunas por cuidado familiar</div>
   <div class="param-block">
@@ -1023,7 +1038,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
         <div class="card-label">Capital Nuevos Beneficiarios</div>
         <div class="card-value gold" id="kpi-nuevos">—</div>
         <div class="card-unit">billones CLP</div>
-        <div class="card-note">Pescadores, pirquineros, cuidadoras...</div>
+        <div class="card-note">Pescadores, recolectoras, cuidadoras...</div>
       </div>
       <div class="card blue">
         <div class="card-label">Retorno B2 Anual Est.</div>
@@ -1076,7 +1091,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
   <!-- TAB: NUEVOS -->
   <div id="tab-nuevos" class="tab-content">
     <div class="sec-head">Nuevos Beneficiarios</div>
-    <div class="sec-desc">Grupos históricamente excluidos con trayectorias laborales quebradas. El libro los reconoce — la calculadora ahora los cuenta.</div>
+    <div class="sec-desc">Nueve grupos históricamente excluidos con trayectorias laborales quebradas. El libro los reconoce — la calculadora ahora los cuenta.</div>
     <table class="groups-table">
       <thead>
         <tr>
@@ -1293,7 +1308,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
       <button class="btn" onclick="window.print()">🖨 Imprimir / PDF</button>
     </div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;">
-      v5.0 · Danilo Daneri Solano · Santiago de Chile, 2026 · Asistencia: Claude (Anthropic) · El debate es bienvenido. La carpeta de evidencia está abierta.
+      v5.1 · Danilo Daneri Solano · Santiago de Chile, 2026 · Asistencia: Claude (Anthropic) · El debate es bienvenido. La carpeta de evidencia está abierta.
     </div>
   </div>
 
@@ -1353,6 +1368,8 @@ function initSliders() {
   bindSlider('temp-tu', 'lbl-temp-tu', v => '$'+v+'K');
   bindSlider('feri-n', 'lbl-feri-n', v => v+'K');
   bindSlider('feri-tu', 'lbl-feri-tu', v => '$'+v+'K');
+  bindSlider('recol-n', 'lbl-recol-n', v => v+'K');
+  bindSlider('recol-tu', 'lbl-recol-tu', v => '$'+v+'K');
   bindSlider('cuida-n', 'lbl-cuida-n', v => v+'K');
   bindSlider('cuida-lag', 'lbl-cuida-lag', v => v+'');
   bindSlider('cuida-tu', 'lbl-cuida-tu', v => '$'+v+'K');
@@ -1434,6 +1451,7 @@ function recalc() {
   const pirq = newGroup('pirq', 'pirq-n', 'pirq-tu');
   const temp = newGroup('temp', 'temp-n', 'temp-tu');
   const feri = newGroup('feri', 'feri-n', 'feri-tu');
+  const recol = newGroup('recol', 'recol-n', 'recol-tu');
 
   // Cuidadoras (laguna)
   const cuida_n = getBool('cuida') ? getVal('cuida-n') * 1000 : 0;
@@ -1446,12 +1464,13 @@ function recalc() {
   const casa = newGroup('casa', 'casa-n', 'casa-tu');
   const indep = newGroup('indep', 'indep-n', 'indep-tu');
 
-  const k_nuevos = pesc.k + pirq.k + temp.k + feri.k + cuida_k + trans.k + casa.k + indep.k;
-  const pension_nuevos = pesc.pension + pirq.pension + temp.pension + feri.pension + cuida_pension + trans.pension + casa.pension + indep.pension;
+  const k_nuevos = pesc.k + pirq.k + temp.k + feri.k + recol.k + cuida_k + trans.k + casa.k + indep.k;
+  const pension_nuevos = pesc.pension + pirq.pension + temp.pension + feri.pension + recol.pension + cuida_pension + trans.pension + casa.pension + indep.pension;
   const n_nuevos = (getBool('pesc') ? getVal('pesc-n')*1000 : 0)
     + (getBool('pirq') ? getVal('pirq-n')*1000 : 0)
     + (getBool('temp') ? getVal('temp-n')*1000 : 0)
     + (getBool('feri') ? getVal('feri-n')*1000 : 0)
+    + (getBool('recol') ? getVal('recol-n')*1000 : 0)
     + cuida_n + trans.n + casa.n + indep.n;
 
   // TOTALES
@@ -1470,7 +1489,7 @@ function recalc() {
     prof: { n: prof_n, kpp: prof_kpp, total: prof_total, pension: prof_pension_anual },
     orig: { n: orig_n, kpp: orig_kpp, total: orig_total, pension: orig_pension_anual, rec: orig_rec, costo: orig_costo_neto },
     civ: { n: civ_n, kpp: civ_k_total_pp, tu_app: civ_tu_app, total: civ_total, total_topup: civ_total_topup, total_propio: civ_total_propio, pension: civ_pension_anual, rec: civ_rec, costo: civ_costo_neto, pension_obj: civ_pension_obj },
-    pesc, pirq, temp, feri,
+    pesc, pirq, temp, feri, recol,
     cuida: { n: cuida_n, k: cuida_k, pension: cuida_pension, lag: cuida_lag, tu: cuida_tu },
     trans, casa, indep,
     vida_m: getVal('vida-m'), vida_h: getVal('vida-h'),
@@ -1484,7 +1503,7 @@ function recalc() {
 function render() {
   const {r, ipc, piso, mult, k_total, k_historicos, k_nuevos, pension_total, interes_anual, cobertura,
     n_total, n_historicos, n_nuevos, b2_ret, uni, prof, orig, civ,
-    pesc, pirq, temp, feri, cuida, trans, casa, indep,
+    pesc, pirq, temp, feri, recol, cuida, trans, casa, indep,
     vida_m, vida_h, anos} = S;
 
   // SEMAPHORE
@@ -1544,6 +1563,7 @@ function render() {
     { label: 'Pirquineros', val: pirq.k, color: 'var(--warn)' },
     { label: 'Temporeros', val: temp.k, color: 'var(--warn)' },
     { label: 'Feriantes', val: feri.k, color: 'var(--warn)' },
+    { label: 'Recolectoras de orilla', val: recol.k, color: 'var(--warn)' },
     { label: 'Cuidadoras', val: cuida.k, color: 'var(--danger)' },
     { label: 'Transportistas', val: trans.k, color: 'var(--warn)' },
     { label: 'Casa particular', val: casa.k, color: 'var(--danger)' },
@@ -1593,6 +1613,7 @@ function render() {
     getBool('pirq') && { name: 'Pirquineros / pequeña minería', n: pirq.n, tu: getVal('pirq-tu')*1000, kpp: pirq.n > 0 ? pirq.k/pirq.n : 0, total: pirq.k, perfil: 'Ing. irregular, desgaste' },
     getBool('temp') && { name: 'Temporeros/as agrícolas', n: temp.n, tu: getVal('temp-tu')*1000, kpp: temp.n > 0 ? temp.k/temp.n : 0, total: temp.k, perfil: 'Cotiz. discontinua' },
     getBool('feri') && { name: 'Feriantes / comercio informal', n: feri.n, tu: getVal('feri-tu')*1000, kpp: feri.n > 0 ? feri.k/feri.n : 0, total: feri.k, perfil: 'Sin contrato formal' },
+    getBool('recol') && { name: 'Recolectoras de orilla y algueras', n: recol.n, tu: getVal('recol-tu')*1000, kpp: recol.n > 0 ? recol.k/recol.n : 0, total: recol.k, perfil: 'Trabajo costero, registro SERNAPESCA' },
     getBool('cuida') && { name: 'Cuidadoras no remuneradas', n: cuida.n, tu: cuida.tu, kpp: cuida.n > 0 ? cuida.k/cuida.n : 0, total: cuida.k, perfil: cuida.lag+' años laguna prom.' },
     getBool('trans') && { name: 'Transportistas / choferes', n: trans.n, tu: getVal('trans-tu')*1000, kpp: trans.n > 0 ? trans.k/trans.n : 0, total: trans.k, perfil: 'Desgaste físico alto' },
     getBool('casa') && { name: 'Trabajadoras casa particular', n: casa.n, tu: getVal('casa-tu')*1000, kpp: casa.n > 0 ? casa.k/casa.n : 0, total: casa.k, perfil: 'Subcotizantes históricas' },
@@ -1722,9 +1743,9 @@ function showTab(id) {
 // ======== EXPORT CSV ========
 function exportCSV() {
   const { r, k_total, pension_total, interes_anual, cobertura, n_total, mult,
-    uni, prof, orig, civ, pesc, pirq, temp, feri, cuida, trans, casa, indep, k_nuevos } = S;
+    uni, prof, orig, civ, pesc, pirq, temp, feri, recol, cuida, trans, casa, indep, k_nuevos } = S;
 
-  let csv = 'MODELO RENTISTA v5.0 — Exportación de resultados\n\n';
+  let csv = 'MODELO RENTISTA v5.1 — Exportación de resultados\n\n';
   csv += 'Parámetro,Valor\n';
   csv += `Tasa retorno real,${(r*100).toFixed(1)}%\n`;
   csv += `Multiplicador,${mult}\n`;
@@ -1738,12 +1759,12 @@ function exportCSV() {
   csv += `Profesores,${Math.round(prof.n/1000)}K,${(prof.total/1e12).toFixed(2)}\n`;
   csv += `Pueblos originarios,${Math.round(orig.n/1000)}K,${(orig.total/1e12).toFixed(2)}\n`;
   csv += `Civiles AFP,${Math.round(civ.n/1000)}K,${(civ.total/1e12).toFixed(2)}\n`;
-  csv += `Total nuevos beneficiarios,${Math.round(S.n_nuevos/1000)}K,${(k_nuevos/1e12).toFixed(2)}\n`;
+  csv += `Total nuevos beneficiarios (9 grupos),${Math.round(S.n_nuevos/1000)}K,${(k_nuevos/1e12).toFixed(2)}\n`;
 
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'modelorentista_v5.csv';
+  a.download = 'modelorentista_v51.csv';
   a.click();
 }
 
