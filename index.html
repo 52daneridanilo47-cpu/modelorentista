@@ -1179,9 +1179,9 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
     <div class="formula-box" style="border-left-color:var(--warn)">
       <div class="f-title">RAAB — Regla Automática Anti-Brecha</div>
       <div class="f-eq">🟢 VERDE: Cobertura ≥100% → Sistema normal</div>
-      <div class="f-eq">🟡 AMARILLO: Cobertura 80–99% → Congela componente real del reajuste</div>
+      <div class="f-eq">🟡 AMARILLO: Cobertura 80–99% → Congela el complemento trienal de la pensión (el fondo sigue su escalonado)</div>
       <div class="f-eq">🔴 ROJO: Cobertura &lt;80% → Suspende distribuciones adicionales, modo defensa</div>
-      <div style="margin-top:8px;color:var(--text3)">La RAAB no recorta pensiones en términos reales — congela su crecimiento. El IPC siempre se protege.</div>
+      <div style="margin-top:8px;color:var(--text3)">La RAAB no recorta pensiones en términos reales — congela únicamente el complemento trienal condicionado. El reajuste por IPC de la pensión siempre se protege, sin excepción.</div>
     </div>
 
     <div class="stress-grid">
@@ -1294,6 +1294,13 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
       <div class="f-title">6. Brecha de Género</div>
       <div class="f-eq">K_extra_mujer = PBS × 12 × ΔVida ÷ r</div>
       <div style="color:var(--text3);margin-top:6px;">ΔVida = diferencia en años de retiro entre mujer y hombre. Este capital adicional justifica la corrección de lagunas por cuidado en el B2.</div>
+    </div>
+
+    <div class="formula-box" style="border-left-color:var(--gold)">
+      <div class="f-title">7. Mecanismo Escalonado de Reajuste Anual — Fondo vs. Pensión</div>
+      <div class="f-eq">Fondo de respaldo: IPC + 5% (años 1–5) → IPC + 2,5% (año 6) → solo IPC (desde año 7)</div>
+      <div class="f-eq">Pensión pagada: IPC (todos los años) + complemento real de referencia ≈2% desde el año 3 y luego cada 3 años, condicionado a semáforo verde y Reserva de Reajuste disponible</div>
+      <div style="color:var(--text3);margin-top:6px;">Son dos trayectorias distintas y no deben confundirse. El fondo individual de respaldo se fortalece con un componente real más intenso durante los primeros años (lógica de transición y reparación histórica), sin que eso implique un aumento equivalente de la pensión. La pensión, en cambio, protege siempre su poder adquisitivo mediante el IPC y solo puede recibir el complemento trienal cuando el semáforo lo permite y la reserva de reajuste está financiada. Los parámetros específicos (magnitud y periodicidad) son calibrables al elaborarse la ley de las AFJ.</div>
     </div>
 
     <div class="footnote">
@@ -1509,7 +1516,7 @@ function render() {
   // SEMAPHORE
   let semCls = 'green', semMsg = 'VERDE — Sistema operable normalmente';
   if (cobertura < 0.8) { semCls = 'red'; semMsg = 'ROJO — Modo defensa RAAB activo'; }
-  else if (cobertura < 1.0) { semCls = 'yellow'; semMsg = 'AMARILLO — Reajuste real congelado'; }
+  else if (cobertura < 1.0) { semCls = 'yellow'; semMsg = 'AMARILLO — Complemento trienal de la pensión congelado'; }
   document.getElementById('sem-green').className = 'sem-dot ' + (semCls === 'green' ? 'active-green' : 'inactive');
   document.getElementById('sem-yellow').className = 'sem-dot ' + (semCls === 'yellow' ? 'active-yellow' : 'inactive');
   document.getElementById('sem-red').className = 'sem-dot ' + (semCls === 'red' ? 'active-red' : 'inactive');
@@ -1541,7 +1548,7 @@ function render() {
   if (cobertura >= 1) {
     aBox.className = 'alert good'; aMsg.textContent = 'El sistema genera suficiente interés para cubrir el 100% del gasto en pensiones. Superávit disponible para reserva B3.';
   } else if (cobertura >= 0.8) {
-    aBox.className = 'alert warn'; aMsg.textContent = 'Cobertura insuficiente. La RAAB congela el componente real del reajuste. Revise parámetros o reduzca beneficiarios activos.';
+    aBox.className = 'alert warn'; aMsg.textContent = 'Cobertura insuficiente. La RAAB congela el complemento trienal de la pensión (el reajuste por IPC no se toca). Revise parámetros o reduzca beneficiarios activos.';
   } else {
     aBox.className = 'alert bad'; aMsg.textContent = 'RAAB en rojo. El sistema activa modo defensa. Las pensiones se protegen en términos reales pero no crecen. Requiere revisión urgente de parámetros.';
   }
