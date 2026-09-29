@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MODELO RENTISTA — Calculadora v5.1</title>
+<title>MODELO RENTISTA — Calculadora v5.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -662,7 +662,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
   <div class="header-top">
     <div>
       <div class="header-title">MODELO RENTISTA</div>
-      <div class="header-sub">Calculadora de Capital, Pensiones y Sostenibilidad · v5.1 · 2026</div>
+      <div class="header-sub">Calculadora de Capital, Pensiones y Sostenibilidad · v5.2 · 2026</div>
       <div style="font-size:11px;color:var(--text3);margin-top:4px;">Danilo Daneri Solano · Asistencia: Claude (Anthropic)</div>
     </div>
     <div class="header-badge">HERRAMIENTA INTERACTIVA</div>
@@ -766,10 +766,9 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
     </div>
     <input type="range" class="green-slider" id="orig-tu" min="200" max="700" step="10" value="400">
     <div class="param-row">
-      <div class="param-label">Tasa recuperación B2<span>Alta informalidad = menor retorno</span></div>
-      <div class="param-val" id="lbl-orig-rec">35%</div>
+      <div class="param-label">Al fallecer<span>El complemento se hereda íntegro (no se devuelve)</span></div>
+      <div class="param-val">Heredable</div>
     </div>
-    <input type="range" class="green-slider" id="orig-rec" min="10" max="80" step="5" value="35">
   </div>
 
   <hr class="divider">
@@ -805,10 +804,9 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
     </div>
     <input type="range" id="civ-tmax" min="200" max="700" step="10" value="450">
     <div class="param-row">
-      <div class="param-label">Tasa recuperación B2</div>
-      <div class="param-val" id="lbl-civ-rec">60%</div>
+      <div class="param-label">Al fallecer<span id="civ-tipo-note">Bajo el piso: el complemento se hereda íntegro. Sobre el piso (Tipos 2 y 3): vuelve solo el capital, reajustado por IPC.</span></div>
+      <div class="param-val" id="lbl-civ-tipo">Heredable</div>
     </div>
-    <input type="range" id="civ-rec" min="20" max="90" step="5" value="60">
   </div>
 
   <hr class="divider">
@@ -1041,10 +1039,10 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
         <div class="card-note">Pescadores, recolectoras, cuidadoras...</div>
       </div>
       <div class="card blue">
-        <div class="card-label">Retorno B2 Anual Est.</div>
+        <div class="card-label">Devolución B2 Anual Est.</div>
         <div class="card-value blue" id="kpi-b2">—</div>
         <div class="card-unit">billones CLP</div>
-        <div class="card-note">Capital retorna al fallecer jubilado</div>
+        <div class="card-note" id="kpi-b2-note">—</div>
       </div>
     </div>
 
@@ -1077,7 +1075,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
           <th>Capital/persona</th>
           <th>Fondo total</th>
           <th>Tipo deuda</th>
-          <th>Recup. B2</th>
+          <th>Al fallecer</th>
         </tr>
       </thead>
       <tbody id="tabla-grupos">
@@ -1107,7 +1105,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
       </tbody>
     </table>
     <div class="footnote">
-      <strong>Nota:</strong> Estos grupos no tienen datos actuariales completos todavía — las cifras son estimaciones de partida para el debate técnico. El capital/persona se calcula como Top-up × 240. La fase piloto debe medir densidad de cotización real, lagunas, esperanza de vida diferenciada y tasa de recuperación B2 por grupo.
+      <strong>Nota:</strong> Estos grupos no tienen datos actuariales completos todavía — las cifras son estimaciones de partida para el debate técnico. El capital/persona se calcula como Top-up × 240. La fase piloto debe medir densidad de cotización real, lagunas, esperanza de vida diferenciada y qué parte de cada grupo queda sobre el piso (Tipos 2 y 3).
     </div>
   </div>
 
@@ -1125,12 +1123,12 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
       <div class="card blue">
         <div class="card-label">Horizonte 2 · Años 16–35</div>
         <div class="card-value blue" style="font-size:18px;">B3 toma el relevo</div>
-        <div class="card-note">La reserva acumulada cubre la brecha. Flujo B2 opera con plena potencia.</div>
+        <div class="card-note">La reserva acumulada cubre la brecha. Desde el año 15 los herederos jubilan con capital propio heredado.</div>
       </div>
       <div class="card gold">
         <div class="card-label">Horizonte 3 · Año 36+</div>
         <div class="card-value gold" style="font-size:18px;">Régimen permanente</div>
-        <div class="card-note">Flujo B2 iguala o supera la originación requerida. El sistema no se vacía.</div>
+        <div class="card-note">La herencia de la 2ª generación reduce el capital nuevo a originar. Lo heredado queda dentro de la AFJ: el fondo nunca se achica.</div>
       </div>
     </div>
 
@@ -1150,9 +1148,9 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
     </table>
 
     <div class="formula-box" style="border-left-color:var(--blue)">
-      <div class="f-title">Flujo B2 — Sostenibilidad por Retorno de Capital</div>
-      <div class="f-eq">Retorno B2 anual = Jubilados_año × (1/Anos_retiro) × Capital_B2_promedio</div>
-      <div style="margin-top:6px;color:var(--text3)">Con <span id="b2-jubilados">1.200.000</span> jubilados civiles y <span id="b2-anos">20</span> años prom. de retiro → ~60.000 fallecidos/año devuelven capital al fondo. Este mecanismo hace innecesario el apoyo fiscal continuo.</div>
+      <div class="f-title">Herencia y cadena — la sostenibilidad no depende de devoluciones</div>
+      <div class="f-eq">Bajo el piso: el complemento se hereda íntegro · Sobre el piso (Tipos 2 y 3): vuelve solo el capital, a IPC</div>
+      <div style="margin-top:6px;color:var(--text3)">Con <span id="b2-jubilados">1.200.000</span> jubilados civiles y <span id="b2-anos">20</span> años prom. de retiro fallecen ~<span id="b2-fallec">60.000</span> por año. Bajo el piso, su complemento no vuelve al fondo: pasa a sus herederos, dentro de la AFJ. Desde el año 15 los hijos empiezan a jubilar con ese capital heredado, y entre los años 15 y 30 el capital nuevo que la AFJ debe poner baja hasta 80% (Excel v6.5, hojas 01 y 10). La cadena no se rompe.</div>
     </div>
   </div>
 
@@ -1186,7 +1184,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
 
     <div class="stress-grid">
       <div class="stress-card">
-        <div class="stress-title">💸 Costo Actuarial B2-Solidario</div>
+        <div class="stress-title">💸 Complemento y herencia (v6.5)</div>
         <div id="stress-b2"></div>
       </div>
       <div class="stress-card">
@@ -1244,7 +1242,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
     <div class="formula-box" style="border-left-color:var(--danger)">
       <div class="f-title">Goldin — Corrección de Brecha de Género</div>
       <div class="f-eq">K_adicional_mujer = PBS × 12 × (Vida_mujer − Vida_hombre) ÷ r</div>
-      <div style="margin-top:8px;color:var(--text3)">El segundo 30% de la Regla 30/30/40 (fondo B2) existe para corregir esto. Una laguna por cuidado es equivalente a una laguna por cesantía involuntaria — el mecanismo top-up recuperable completa el capital faltante bajo reglas objetivas.</div>
+      <div style="margin-top:8px;color:var(--text3)">El segundo 30% de la Regla 30/30/40 (fondo B2) existe para corregir esto. Una laguna por cuidado es equivalente a una laguna por cesantía involuntaria — el complemento completa el capital faltante bajo reglas objetivas, y bajo el piso se hereda.</div>
     </div>
 
     <div id="genero-alert" class="alert warn" style="margin-top:16px;">
@@ -1279,15 +1277,17 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
     <div class="formula-box" style="border-left-color:var(--warn)">
       <div class="f-title">4. Regla 30/30/40</div>
       <div class="f-eq">B1 (30%) → Financiamiento productivo con retorno</div>
-      <div class="f-eq">B2 (30%) → Corrección lagunas con retorno (top-up recuperable)</div>
+      <div class="f-eq">B2 (30%) → Corrección de lagunas (bajo el piso se hereda; sobre el piso vuelve el capital a IPC)</div>
       <div class="f-eq">B3 (40%) → Reserva anti-crisis</div>
       <div style="color:var(--text3);margin-top:6px;">Distribución sujeta a calibración actuarial en fase piloto. Nota del autor: es propuesta de diseño, no certeza cerrada.</div>
     </div>
 
     <div class="formula-box" style="border-left-color:var(--accent2)">
-      <div class="f-title">5. Flujo B2 — Sostenibilidad por Retorno de Capital</div>
-      <div class="f-eq">Retorno_B2 = (N_jubilados ÷ Anos_retiro) × Capital_B2_promedio</div>
-      <div style="color:var(--text3);margin-top:6px;">El capital prestado por el sistema retorna al morir el jubilado (descontada herencia del capital propio). Este flujo crece con el tiempo y hace autosuficiente al sistema en el Horizonte 3.</div>
+      <div class="f-title">5. Herencia del complemento (regla v6.5)</div>
+      <div class="f-eq">Tramo = pensión AFP propia (Capital_propio ÷ 240) comparada con el piso</div>
+      <div class="f-eq">Bajo el piso (incluido el monto exacto): Devolución = 0 → el complemento se hereda íntegro</div>
+      <div class="f-eq">Sobre el piso (Tipos 2 y 3): Devolución = Capital prestado × IPC acumulado (sin interés real)</div>
+      <div style="color:var(--text3);margin-top:6px;">Lo heredado no sale del sistema: queda en la AFJ a nombre de los herederos. Desde el año 15 la segunda generación jubila con ese capital, lo que reduce el capital nuevo a originar. El fondo nunca se achica, solo redistribuye propiedad.</div>
     </div>
 
     <div class="formula-box" style="border-left-color:var(--danger)">
@@ -1315,7 +1315,7 @@ input[type=range].green-slider::-webkit-slider-thumb { background: var(--green-l
       <button class="btn" onclick="window.print()">🖨 Imprimir / PDF</button>
     </div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;">
-      v5.1 · Danilo Daneri Solano · Santiago de Chile, 2026 · Asistencia: Claude (Anthropic) · El debate es bienvenido. La carpeta de evidencia está abierta.
+      v5.2 · Danilo Daneri Solano · Santiago de Chile, 2026 · Asistencia: Claude (Anthropic) · El debate es bienvenido. La carpeta de evidencia está abierta.
     </div>
   </div>
 
@@ -1360,13 +1360,11 @@ function initSliders() {
   bindSlider('prof-tu', 'lbl-prof-tu', v => '$'+v+'K');
   bindSlider('orig-n', 'lbl-orig-n', v => v+'K');
   bindSlider('orig-tu', 'lbl-orig-tu', v => '$'+v+'K');
-  bindSlider('orig-rec', 'lbl-orig-rec', v => v+'%');
   bindSlider('civ-n', 'lbl-civ-n', v => v+'K');
   bindSlider('civ-k', 'lbl-civ-k', v => '$'+v+'M');
   bindSlider('civ-s', 'lbl-civ-s', v => '$'+v+'K');
   bindSlider('civ-tr', 'lbl-civ-tr', v => v+'%');
   bindSlider('civ-tmax', 'lbl-civ-tmax', v => '$'+v+'K');
-  bindSlider('civ-rec', 'lbl-civ-rec', v => v+'%');
   bindSlider('pesc-n', 'lbl-pesc-n', v => v+'K');
   bindSlider('pesc-tu', 'lbl-pesc-tu', v => '$'+v+'K');
   bindSlider('pirq-n', 'lbl-pirq-n', v => v+'K');
@@ -1421,7 +1419,7 @@ function recalc() {
   const orig_n = getVal('orig-n') * 1000;
   const orig_tu = getVal('orig-tu') * 1000;
   const orig_kpp = orig_tu * mult;
-  const orig_rec = getVal('orig-rec') / 100;
+  const orig_rec = 0; // v5.2: heredable íntegro, sin devolución (Excel v6.5, P6)
   const orig_total = getBool('orig') ? orig_n * orig_kpp : 0;
   const orig_pension_anual = getBool('orig') ? orig_n * orig_tu * 12 : 0;
   const orig_costo_neto = getBool('orig') ? orig_total * (1 - orig_rec) : 0;
@@ -1432,7 +1430,12 @@ function recalc() {
   const civ_s = getVal('civ-s') * 1000;
   const civ_tr = getVal('civ-tr') / 100;
   const civ_tmax = getVal('civ-tmax') * 1000;
-  const civ_rec = getVal('civ-rec') / 100;
+  // v5.2 (regla del autor, 28-sep-2026; Excel v6.5 H1=0): el tramo se define por la pensión AFP propia.
+  // Bajo el piso (incluido el monto exacto) el complemento se hereda íntegro: no vuelve nada.
+  // Sobre el piso (Tipos 2 y 3) vuelve solo el capital prestado, reajustado por IPC (0% real).
+  const civ_pension_propia = civ_k / mult;
+  const civ_tipo1 = civ_pension_propia <= piso;
+  const civ_rec = civ_tipo1 ? 0 : 1;
   const civ_pension_obj = civ_s * civ_tr;
   const civ_k_nec = civ_pension_obj * mult;
   const civ_tu_teo = Math.max(0, civ_k_nec - civ_k);
@@ -1445,7 +1448,10 @@ function recalc() {
   const civ_costo_neto = getBool('civil') ? civ_total_topup * (1 - civ_rec) : 0;
 
   // B2 retorno anual civil
-  const b2_ret = getBool('civil') ? (civ_n / anos) * civ_tu_app : 0;
+  const b2_ret = (getBool('civil') && !civ_tipo1) ? (civ_n / anos) * civ_tu_app : 0;
+  const heredado_anual = (getBool('civil') && civ_tipo1 ? (civ_n / anos) * civ_tu_app : 0)
+    + (getBool('prof') ? (prof_n / anos) * prof_kpp : 0)
+    + (getBool('orig') ? (orig_n / anos) * orig_kpp : 0);
 
   // Nuevos beneficiarios
   function newGroup(active_id, n_id, tu_id) {
@@ -1491,7 +1497,7 @@ function recalc() {
   const n_total = n_historicos + n_nuevos;
 
   S = { r, ipc, piso, anos, mult, k_total, k_historicos, k_nuevos, pension_total, interes_anual, cobertura,
-    n_total, n_historicos, n_nuevos, b2_ret,
+    n_total, n_historicos, n_nuevos, b2_ret, heredado_anual, civ_tipo1, civ_pension_propia,
     uni: { n: uni_n, kpp: uni_kpp, total: uni_total, pension: uni_pension_anual },
     prof: { n: prof_n, kpp: prof_kpp, total: prof_total, pension: prof_pension_anual },
     orig: { n: orig_n, kpp: orig_kpp, total: orig_total, pension: orig_pension_anual, rec: orig_rec, costo: orig_costo_neto },
@@ -1509,7 +1515,7 @@ function recalc() {
 // ======== RENDER ========
 function render() {
   const {r, ipc, piso, mult, k_total, k_historicos, k_nuevos, pension_total, interes_anual, cobertura,
-    n_total, n_historicos, n_nuevos, b2_ret, uni, prof, orig, civ,
+    n_total, n_historicos, n_nuevos, b2_ret, heredado_anual, civ_tipo1, civ_pension_propia, uni, prof, orig, civ,
     pesc, pirq, temp, feri, recol, cuida, trans, casa, indep,
     vida_m, vida_h, anos} = S;
 
@@ -1535,6 +1541,10 @@ function render() {
   document.getElementById('kpi-personas-note').textContent = Math.round(n_historicos/1000)+'K hist. + '+Math.round(n_nuevos/1000)+'K nuevos';
   document.getElementById('kpi-nuevos').textContent = fmtBill(k_nuevos);
   document.getElementById('kpi-b2').textContent = fmtBill(b2_ret);
+  document.getElementById('kpi-b2-note').textContent = civ_tipo1
+    ? 'Bajo el piso el complemento se hereda: no vuelve al fondo. Queda en las familias ~'+fmtBill(heredado_anual)+' bill./año.'
+    : 'Solo Tipos 2 y 3 (sobre el piso): vuelve el capital prestado, a IPC.';
+  document.getElementById('lbl-civ-tipo').textContent = civ_tipo1 ? 'Heredable' : 'Vuelve a IPC';
 
   // COBERTURA
   const pct = Math.min(cobertura * 100, 150);
@@ -1586,10 +1596,10 @@ function render() {
 
   // TABLA GRUPOS
   const gRows = [
-    getBool('uni') && { name: 'Uniformados CAPREDENA/DIPRECA', tag: 'gold', tagLabel: 'Promesa', n: uni.n, pension: getVal('uni-s')*1000, kpp: uni.kpp, total: uni.total, deuda: 'Sin patrimonio', rec: '—' },
-    getBool('prof') && { name: 'Profesores sistema público', tag: 'blue', tagLabel: 'Subvaloración', n: prof.n, pension: getVal('prof-tu')*1000, kpp: prof_kpp(), total: prof.total, deuda: 'Sueldo bajo → cotiz. baja', rec: '85%' },
-    getBool('orig') && { name: 'Pueblos originarios', tag: 'green', tagLabel: 'Exclusión', n: orig.n, pension: getVal('orig-tu')*1000, kpp: orig_kpp(), total: orig.total, deuda: 'Informalidad estructural', rec: fmtPct(orig.rec*100) },
-    getBool('civil') && { name: 'Jubilados civiles AFP', tag: 'warn', tagLabel: 'Mayoría', n: civ.n, pension: civ.pension_obj, kpp: civ.kpp, total: civ.total, deuda: 'Pensiones insuficientes', rec: fmtPct(civ.rec*100) },
+    getBool('uni') && { name: 'Uniformados CAPREDENA/DIPRECA', tag: 'gold', tagLabel: 'Promesa', n: uni.n, pension: getVal('uni-s')*1000, kpp: uni.kpp, total: uni.total, deuda: 'Sin patrimonio', rec: 'Se hereda' },
+    getBool('prof') && { name: 'Profesores sistema público', tag: 'blue', tagLabel: 'Subvaloración', n: prof.n, pension: getVal('prof-tu')*1000, kpp: prof_kpp(), total: prof.total, deuda: 'Sueldo bajo → cotiz. baja', rec: 'Se hereda' },
+    getBool('orig') && { name: 'Pueblos originarios', tag: 'green', tagLabel: 'Exclusión', n: orig.n, pension: getVal('orig-tu')*1000, kpp: orig_kpp(), total: orig.total, deuda: 'Informalidad estructural', rec: 'Se hereda' },
+    getBool('civil') && { name: 'Jubilados civiles AFP', tag: 'warn', tagLabel: 'Mayoría', n: civ.n, pension: civ.pension_obj, kpp: civ.kpp, total: civ.total, deuda: 'Pensiones insuficientes', rec: civ_tipo1 ? 'Se hereda' : 'Capital a IPC' },
   ].filter(Boolean);
   function prof_kpp() { return getVal('prof-tu')*1000 * S.mult; }
   function orig_kpp() { return getVal('orig-tu')*1000 * S.mult; }
@@ -1647,6 +1657,7 @@ function render() {
   // TIMELINE SOSTENIBILIDAD
   document.getElementById('b2-jubilados').textContent = Math.round(civ.n/1000)+'K';
   document.getElementById('b2-anos').textContent = anos;
+  document.getElementById('b2-fallec').textContent = Math.round(civ.n/anos).toLocaleString('es-CL');
   const years = [0,1,3,5,8,10,15,20,25,35];
   let rows = '';
   for (const y of years) {
@@ -1695,13 +1706,14 @@ function render() {
   document.getElementById('stress-longevidad').innerHTML = stressLon;
 
   const stressB2 = [
-    { label: 'Urbanos formales (85%)', k: 9600000, n: 800000, rec: 0.85 },
-    { label: 'Informalidad parcial (60%)', k: 18000000, n: 1200000, rec: 0.60 },
-    { label: 'Pueblos orig. / alta inf. (35%)', k: 25900000, n: 350000, rec: 0.35 },
+    { label: 'Civiles bajo el piso: se hereda', v: (civ_tipo1 ? civ.total_topup : 0), txt: null },
+    { label: 'Profesores y p. originarios: se hereda', v: prof.total + orig.total, txt: null },
+    { label: 'Sobre el piso (Tipos 2-3): vuelve', v: null, txt: 'capital a IPC' },
+    { label: 'Herencia 2ª gen. (años 15–30)', v: null, txt: '−80% capital nuevo' },
   ].map(g => {
-    const costo = g.k * g.n * (1 - g.rec) / 1e12;
-    const clr = g.rec >= 0.8 ? 'var(--green-light)' : g.rec >= 0.5 ? 'var(--warn)' : 'var(--danger)';
-    return `<div class="stress-row"><span class="s-label" style="font-size:10px">${g.label}</span><span class="s-val" style="color:${clr}">$${costo.toFixed(1)}B neto</span></div>`;
+    const val = g.txt ? g.txt : '$' + (g.v/1e12).toFixed(1) + 'B';
+    const clr = g.txt ? 'var(--green-light)' : 'var(--text2)';
+    return `<div class="stress-row"><span class="s-label" style="font-size:10px">${g.label}</span><span class="s-val" style="color:${clr}">${val}</span></div>`;
   }).join('');
   document.getElementById('stress-b2').innerHTML = stressB2;
 
@@ -1752,7 +1764,7 @@ function exportCSV() {
   const { r, k_total, pension_total, interes_anual, cobertura, n_total, mult,
     uni, prof, orig, civ, pesc, pirq, temp, feri, recol, cuida, trans, casa, indep, k_nuevos } = S;
 
-  let csv = 'MODELO RENTISTA v5.1 — Exportación de resultados\n\n';
+  let csv = 'MODELO RENTISTA v5.2 — Exportación de resultados\n\n';
   csv += 'Parámetro,Valor\n';
   csv += `Tasa retorno real,${(r*100).toFixed(1)}%\n`;
   csv += `Multiplicador,${mult}\n`;
@@ -1771,7 +1783,7 @@ function exportCSV() {
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'modelorentista_v51.csv';
+  a.download = 'modelorentista_v52.csv';
   a.click();
 }
 
